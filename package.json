@@ -10,7 +10,7 @@
     "start": "concurrently -n API,WEB -c yellow,green \"npm:server\" \"npm:dev\"",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist --dotfiles"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
