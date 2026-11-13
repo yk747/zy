@@ -17,15 +17,6 @@
       </el-button>
     </div>
 
-    <el-alert
-      v-if="serverState.online === false"
-      :title="serverState.message"
-      type="warning"
-      show-icon
-      :closable="false"
-      class="offline-alert"
-    />
-
     <div class="hero card">
       <SearchBar v-model="keyword" @search="onSearch" />
       <el-select v-model="sort" class="sort-select" size="large">
@@ -86,7 +77,7 @@ import { ElMessage } from 'element-plus'
 import SearchBar from '../components/SearchBar.vue'
 import GoodsCard from '../components/GoodsCard.vue'
 import StatCard from '../components/StatCard.vue'
-import { fetchGoods, fetchUsers, serverState } from '../api/goods'
+import { fetchGoods, fetchUsers } from '../api/goods'
 import { useCartStore } from '../store/cart'
 import { useFavoriteStore } from '../store/favorite'
 import { CATEGORIES } from '../../shared/goods.js'
@@ -96,7 +87,6 @@ export default {
   components: { SearchBar, GoodsCard, StatCard },
   data() {
     return {
-      serverState,
       goodsList: [],
       users: [],
       loading: true,
@@ -196,11 +186,6 @@ export default {
 </script>
 
 <style scoped>
-.offline-alert {
-  margin: 14px 0 0;
-  border-radius: 12px;
-}
-
 .hero {
   display: flex;
   flex-wrap: wrap;

@@ -12,23 +12,12 @@
         <p class="sub">已选宝贝支持一键下单，校园当面交付更安心。</p>
       </div>
       <div class="head-actions">
-        <el-tag :type="serverState.online === false ? 'warning' : 'success'" effect="plain">
-          {{ serverState.online === false ? '离线模式' : '在线服务' }}
-        </el-tag>
+        <el-tag v-if="serverState.online" type="success" effect="plain">在线服务</el-tag>
         <el-button @click="$router.push('/market')">
           <el-icon><Plus /></el-icon>继续选购
         </el-button>
       </div>
     </div>
-
-    <el-alert
-      v-if="serverState.online === false"
-      :title="serverState.message"
-      type="warning"
-      show-icon
-      :closable="false"
-      class="offline-alert"
-    />
 
     <div v-if="isEmpty" class="card card--plain empty-card">
       <el-empty description="购物车暂无宝贝，去闲置集市挑选心仪好物吧">
@@ -195,10 +184,6 @@ export default {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.offline-alert {
-  margin: 12px 0;
 }
 
 .empty-card {
