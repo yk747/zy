@@ -1,0 +1,322 @@
+/* ============================================================
+   style.css —— 全局样式与设计令牌（校园二手集市 · 绿色主题）
+   设计令牌：换肤只改 :root 这一组变量。
+   同时覆盖 Element Plus 的主色变量，让组件库和页面配色统一。
+   ============================================================ */
+:root {
+  --primary: #00b578;          /* 集市主色：校园绿 */
+  --primary-dark: #068c5c;
+  --primary-bg: #e9f7f1;
+  --accent: #f57224;           /* 价格橙 */
+  --accent-bg: #fff1e8;
+  --warn: #d97706;
+  --warn-bg: #fff7e6;
+  --danger: #c0392b;
+  --text: #2c3e50;
+  --muted: #8b95a1;
+  --bg: #f5f7f6;
+  --card: #ffffff;
+  --border: #e6ebe8;
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(23, 66, 51, 0.05), 0 4px 14px rgba(23, 66, 51, 0.06);
+  --shadow-hover: 0 2px 4px rgba(23, 66, 51, 0.08), 0 12px 26px rgba(23, 66, 51, 0.1);
+
+  /* Element Plus 主色（含浅色梯度），让 el-button / el-tag / el-pagination 跟随集市主题 */
+  --el-color-primary: #00b578;
+  --el-color-primary-light-3: #47c798;
+  --el-color-primary-light-5: #80d9b8;
+  --el-color-primary-light-7: #bfe8d8;
+  --el-color-primary-light-8: #dcf2e8;
+  --el-color-primary-light-9: #edf9f4;
+  --el-color-primary-dark-2: #009260;
+
+  font-family: system-ui, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 300px at 50% -90px, #dff3ea 0%, transparent 70%),
+    var(--bg);
+}
+
+#app {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--text);
+}
+
+h1 {
+  font-size: 24px;
+  margin: 0 0 4px;
+  letter-spacing: 0.5px;
+}
+
+h1::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 4px;
+  margin-top: 8px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+h2 {
+  font-size: 18px;
+  margin: 10px 0 12px;
+}
+
+a {
+  color: var(--primary-dark);
+}
+
+/* ---------- 布局骨架 ---------- */
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 20px 56px;
+}
+
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.page-head .sub {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.toolbar .grow {
+  flex: 1;
+  min-width: 220px;
+}
+
+/* ---------- 卡片 ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  margin: 14px 0;
+  text-align: left;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.card > h2:first-child,
+.card > h3:first-child {
+  margin-top: 0;
+}
+
+.card--plain {
+  border-left-color: var(--border);
+}
+
+.card--accent {
+  border-left-color: var(--accent);
+}
+
+.card--warn {
+  border-left-color: var(--warn);
+}
+
+/* ---------- 文本与提示 ---------- */
+.muted {
+  color: var(--muted);
+  margin-top: 0;
+}
+
+.small {
+  font-size: 13px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 1px 10px;
+  border-radius: 999px;
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.tag--accent {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.tag--warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+/* ---------- 代码 / 输出展示区 ---------- */
+.console {
+  background: #211a17;
+  color: #e6ded9;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: left;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.console .ok {
+  color: #7bdba0;
+}
+
+.console .err {
+  color: #ff8b7e;
+}
+
+code {
+  background: var(--primary-bg);
+  border-radius: 4px;
+  padding: 0 6px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 0.92em;
+}
+
+mark {
+  background: #ffe9a8;
+  color: #7a5b00;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* ---------- 表单元素（排除组件库） ---------- */
+button:not(.el-button):not(.van-button) {
+  font: inherit;
+  padding: 5px 14px;
+  margin: 2px 6px 2px 0;
+  color: var(--primary-dark);
+  background: #fff;
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+button:not(.el-button):not(.van-button):hover {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 181, 120, 0.35);
+}
+
+button:not(.el-button):not(.van-button):active {
+  transform: translateY(1px);
+}
+
+input:not(.el-input__inner):not(.van-field__control) {
+  font: inherit;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input:not(.el-input__inner):not(.van-field__control):focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 181, 120, 0.15);
+}
+
+/* ---------- 闲置价格口径 ---------- */
+.price {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.price small {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.price-original {
+  color: var(--muted);
+  text-decoration: line-through;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+/* ---------- 手机壳：PC 里模拟 375px 手机屏（移动端集市） ---------- */
+.phone {
+  width: 375px;
+  max-width: 100%;
+  margin: 0 auto;
+  border: 10px solid #1f2329;
+  border-radius: 28px;
+  background: #fff;
+  padding: 14px 12px 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.phone .phone-bar {
+  height: 18px;
+  margin: -4px 0 12px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e8eaed, #f5f6f8);
+}
+
+/* ---------- 路由切换淡入 ---------- */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 720px) {
+  .page {
+    padding: 16px 12px 40px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "goods": [
+    {
+      "id": "g1001",
+      "title": "高等数学（第七版）上下册 同济版",
+      "category": "教材书籍",
+      "price": 25,
+      "condition": "八成新",
+      "emoji": "📐",
+      "gradient": "linear-gradient(135deg, #34d399, #0ea5e9)",
+      "desc": "大一下学期用的教材，重点章节有铅笔笔记，笔记反而好复习，两本一起出。",
+      "sellerId": "u1",
+      "status": "在售",
+      "createdAt": "2026-11-08"
+    },
+    {
+      "id": "g1002",
+      "title": "iPhone 13 128G 蓝色 电池效率91%",
+      "category": "电子数码",
+      "price": 2680,
+      "condition": "九成新",
+      "emoji": "📱",
+      "gradient": "linear-gradient(135deg, #60a5fa, #6366f1)",
+      "desc": "自用一年半，一直贴膜带壳，无磕碰划痕，配原装充电头，可当面验机。",
+      "sellerId": "u2",
+      "status": "在售",
+      "createdAt": "2026-11-10"
+    },
+    {
+      "id": "g1003",
+      "title": "罗技 K380 蓝牙键盘 粉色",
+      "category": "电子数码",
+      "price": 89,
+      "condition": "九成新",
+      "emoji": "⌨️",
+      "gradient": "linear-gradient(135deg, #f9a8d4, #f472b6)",
+      "desc": "考研党出闲置，可连三台设备，上课记笔记很方便，附赠保护包。",
+      "sellerId": "u3",
+      "status": "在售",
+      "createdAt": "2026-11-11"
+    },
+    {
+      "id": "g1004",
+      "title": "四级真题狂刷 12 套（未拆封）",
+      "category": "教材书籍",
+      "price": 15,
+      "condition": "全新未拆",
+      "emoji": "📘",
+      "gradient": "linear-gradient(135deg, #a7f3d0, #34d399)",
+      "desc": "重复买多的全新真题，塑封都没拆，原价 32 出 15，校内当面交易。",
+      "sellerId": "u4",
+      "status": "在售",
+      "createdAt": "2026-11-12"
+    },
+    {
+      "id": "g1005",
+      "title": "小米台灯 Pro 国AA级照度",
+      "category": "生活用品",
+      "price": 99,
+      "condition": "八成新",
+      "emoji": "💡",
+      "gradient": "linear-gradient(135deg, #fde68a, #f59e0b)",
+      "desc": "宿舍熄灯后复习神器，亮度无极调节，搬宿舍带不走，功能一切正常。",
+      "sellerId": "u1",
+      "status": "在售",
+      "createdAt": "2026-11-09"
+    },
+    {
+      "id": "g1006",
+      "title": "尤尼克斯羽毛球拍 天斧77Pro",
+      "category": "运动健身",
+      "price": 420,
+      "condition": "九成新",
+      "emoji": "🏸",
+      "gradient": "linear-gradient(135deg, #fca5a5, #ef4444)",
+      "desc": "打了不到十个场次，拍框无掉漆，已穿 26 磅线，附拍套，可约球场试打。",
+      "sellerId": "u5",
+      "status": "在售",
+      "createdAt": "2026-11-07"
+    },
+    {
+      "id": "g1007",
+      "title": "宿舍小冰箱 40L 迷你单门",
+      "category": "生活用品",
+      "price": 260,
+      "condition": "七成新",
+      "emoji": "🧊",
+      "gradient": "linear-gradient(135deg, #93c5fd, #3b82f6)",
+      "desc": "夏天囤酸奶冰饮用的，制冷正常噪音小，毕业清宿舍低价出，自提。",
+      "sellerId": "u6",
+      "status": "在售",
+      "createdAt": "2026-11-05"
+    },
+    {
+      "id": "g1008",
+      "title": "Adobe 全家桶正版学生订阅（转半学年）",
+      "category": "其他闲置",
+      "price": 150,
+      "condition": "全新未拆",
+      "emoji": "🎨",
+      "gradient": "linear-gradient(135deg, #c4b5fd, #8b5cf6)",
+      "desc": "课程设计用不到这么多软件了，官方学生订阅转手，可在官网验证。",
+      "sellerId": "u2",
+      "status": "在售",
+      "createdAt": "2026-11-12"
+    },
+    {
+      "id": "g1009",
+      "title": "哑铃套装 10kg 可调节",
+      "category": "运动健身",
+      "price": 120,
+      "condition": "八成新",
+      "emoji": "🏋️",
+      "gradient": "linear-gradient(135deg, #d1d5db, #6b7280)",
+      "desc": "两只 5kg 可组合，橡胶包裹不伤地板，宿舍健身入门够用。",
+      "sellerId": "u4",
+      "status": "在售",
+      "createdAt": "2026-11-06"
+    },
+    {
+      "id": "g1010",
+      "title": "兰蔻小黑瓶眼霜 15g 余量9成",
+      "category": "美妆个护",
+      "price": 180,
+      "condition": "九成新",
+      "emoji": "🧴",
+      "gradient": "linear-gradient(135deg, #fbcfe8, #a855f7)",
+      "desc": "双11囤多了一瓶，专柜正品可查批号，只用过两三次，介意勿拍。",
+      "sellerId": "u3",
+      "status": "在售",
+      "createdAt": "2026-11-11"
+    },
+    {
+      "id": "g1011",
+      "title": "Kindle 青春版 8G 黑白屏",
+      "category": "电子数码",
+      "price": 330,
+      "condition": "九成新",
+      "emoji": "📖",
+      "gradient": "linear-gradient(135deg, #a5b4fc, #4f46e5)",
+      "desc": "吃灰出，屏幕无压伤，充电正常，送保护壳和数据线，适合考研看资料。",
+      "sellerId": "u5",
+      "status": "在售",
+      "createdAt": "2026-11-04"
+    },
+    {
+      "id": "g1012",
+      "title": "考研数学复习全书+660题 全套",
+      "category": "教材书籍",
+      "price": 45,
+      "condition": "七成新",
+      "emoji": "📗",
+      "gradient": "linear-gradient(135deg, #6ee7b7, #059669)",
+      "desc": "上岸学长清书，全套 5 本，写了部分铅笔痕迹，送错题本。",
+      "sellerId": "u6",
+      "status": "下架",
+      "createdAt": "2026-11-03"
+    }
+  ],
+  "users": [
+    {
+      "id": "u1",
+      "name": "小杨",
+      "password": "123456",
+      "dorm": "东区 8 号楼 502",
+      "phone": "13800001001"
+    },
+    {
+      "id": "u2",
+      "name": "小刘",
+      "password": "123456",
+      "dorm": "东区 6 号楼 301",
+      "phone": "13800001002"
+    },
+    {
+      "id": "u3",
+      "name": "小郭",
+      "password": "123456",
+      "dorm": "西区 3 号楼 415",
+      "phone": "13800001003"
+    },
+    {
+      "id": "u4",
+      "name": "陈知远",
+      "password": "123456",
+      "dorm": "西区 5 号楼 208",
+      "phone": "13800001004"
+    },
+    {
+      "id": "u5",
+      "name": "周予安",
+      "password": "123456",
+      "dorm": "东区 9 号楼 606",
+      "phone": "13800001005"
+    },
+    {
+      "id": "u6",
+      "name": "林一诺",
+      "password": "123456",
+      "dorm": "西区 2 号楼 509",
+      "phone": "13800001006"
+    }
+  ],
+  "orders": [
+    {
+      "id": "o9001",
+      "orderNo": "CM2611080197",
+      "buyerId": "u1",
+      "buyerName": "小杨",
+      "items": [
+        {
+          "goodsId": "g1004",
+          "title": "四级真题狂刷 12 套（未拆封）",
+          "price": 15,
+          "emoji": "📘",
+          "gradient": "linear-gradient(135deg, #a7f3d0, #34d399)",
+          "sellerId": "u4",
+          "sellerName": "陈知远"
+        }
+      ],
+      "total": 15,
+      "status": "已完成",
+      "contact": "13800001001",
+      "place": "东区 8 号楼楼下快递柜",
+      "note": "",
+      "createdAt": "2026-11-08T12:30:00.000Z"
+    },
+    {
+      "id": "o9002",
+      "orderNo": "CM2611100431",
+      "buyerId": "u2",
+      "buyerName": "李墨白",
+      "items": [
+        {
+          "goodsId": "g1012",
+          "title": "考研数学复习全书+660题 全套",
+          "price": 45,
+          "emoji": "📗",
+          "gradient": "linear-gradient(135deg, #6ee7b7, #059669)",
+          "sellerId": "u6",
+          "sellerName": "林一诺"
+        }
+      ],
+      "total": 45,
+      "status": "待面交",
+      "contact": "13800001002",
+      "place": "图书馆二楼自习区门口",
+      "note": "今晚 7 点左右方便面交",
+      "createdAt": "2026-11-10T18:05:00.000Z"
+    }
+  ]
+}
