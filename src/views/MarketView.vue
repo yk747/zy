@@ -9,25 +9,22 @@
   <div class="page">
     <div class="page-head">
       <div>
-        <div class="title-row">
-          <h1>闲置集市</h1>
-          <el-tooltip
-            v-if="serverState.online === false"
-            content="未连接本地接口，数据仅保存在当前浏览器"
-            placement="right"
-          >
-            <el-tag type="info" effect="plain" size="small" round>演示模式</el-tag>
-          </el-tooltip>
-          <el-tag v-else-if="serverState.online" type="success" effect="plain" size="small" round>
-            在线服务
-          </el-tag>
-        </div>
+        <h1>闲置集市</h1>
         <p class="sub">平台严选校内优质闲置，价格透明，当面验货更安心。</p>
       </div>
       <el-button type="primary" @click="$router.push('/publish')">
         <el-icon><CirclePlus /></el-icon>发布宝贝
       </el-button>
     </div>
+
+    <el-alert
+      v-if="serverState.online === false"
+      :title="serverState.message"
+      type="warning"
+      show-icon
+      :closable="false"
+      class="offline-alert"
+    />
 
     <div class="hero card">
       <SearchBar v-model="keyword" @search="onSearch" />
@@ -199,14 +196,9 @@ export default {
 </script>
 
 <style scoped>
-.title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.title-row h1 {
-  margin: 0;
+.offline-alert {
+  margin: 14px 0 0;
+  border-radius: 12px;
 }
 
 .hero {
