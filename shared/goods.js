@@ -22,7 +22,8 @@ export const USER_SEED = [
   { id: 'u3', name: '小郭', password: '123456', dorm: '西区 3 号楼 415', phone: '13800001003' },
   { id: 'u4', name: '陈知远', password: '123456', dorm: '西区 5 号楼 208', phone: '13800001004' },
   { id: 'u5', name: '周予安', password: '123456', dorm: '东区 9 号楼 606', phone: '13800001005' },
-  { id: 'u6', name: '林一诺', password: '123456', dorm: '西区 2 号楼 509', phone: '13800001006' }
+  { id: 'u6', name: '林一诺', password: '123456', dorm: '西区 2 号楼 509', phone: '13800001006' },
+  { id: 'u7', name: '校园体验官', password: '123456', dorm: '东区 1 号楼 101', phone: '13800001007' }
 ]
 
 export const GOODS_SEED = [
@@ -235,4 +236,4 @@ export const ORDER_SEED = [
   }
 ]
 
-export const DEMO_ACCOUNT = { username: '小杨', password: '123456' }
+export const DEMO_ACCOUNT = { username: '校园体验官', password: '123456' }

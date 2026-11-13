@@ -150,7 +150,7 @@
 
         <el-button class="quick" size="large" :disabled="loading" @click="quickLogin">
           <el-icon><MagicStick /></el-icon>
-          免费体验（演示账号）
+          免费体验
         </el-button>
       </section>
     </div>
@@ -229,7 +229,7 @@ export default {
         JSON.stringify({ autoLogin: this.autoLogin })
       )
     },
-    // 一键体验：以体验同学身份直接进入集市
+    // 一键体验：以体验官身份直接进入集市
     quickLogin() {
       if (this.loading) return
       this.form.username = DEMO_ACCOUNT.username
@@ -261,7 +261,7 @@ export default {
           const matched = users.find((user) => user.name === this.form.username)
 
           if (!matched) {
-            ElMessage.error('账号不存在，请核对昵称或使用演示账号体验')
+            ElMessage.error('账号不存在，请核对昵称或点击下方按钮快速体验')
             return
           }
           if (matched.password !== this.form.password) {
