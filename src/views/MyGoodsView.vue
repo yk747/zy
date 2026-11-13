@@ -7,7 +7,7 @@
   ============================================================ -->
 <template>
   <div class="my-goods">
-    <div v-loading="loading" class="goods-area" element-loading-text="正在加载你的发布…">
+    <div v-loading="loading" class="goods-area" element-loading-text="正在加载我发布的宝贝…">
       <template v-if="myGoods.length">
         <div v-for="goods in myGoods" :key="goods.id" class="publish-item">
           <div class="cover" :style="{ background: goods.gradient }">{{ goods.emoji }}</div>
@@ -17,7 +17,7 @@
             <div class="meta">
               <span class="tag">{{ goods.category }}</span>
               <span class="tag tag--accent">{{ goods.condition }}</span>
-              <span class="small muted">编号 {{ goods.id }} · 发布于 {{ goods.createdAt }}</span>
+              <span class="small muted">编号 {{ goods.id }} · 上架于 {{ goods.createdAt }}</span>
             </div>
           </div>
 
@@ -46,8 +46,8 @@
         </div>
       </template>
 
-      <el-empty v-else-if="!loading" description="你还没有发布过闲置，去赚第一桶金吧">
-        <el-button type="primary" @click="$router.push('/publish')">发布闲置</el-button>
+      <el-empty v-else-if="!loading" description="暂无在售宝贝，发布后即刻展示在闲置集市">
+        <el-button type="primary" @click="$router.push('/publish')">发布宝贝</el-button>
       </el-empty>
     </div>
 
@@ -107,7 +107,7 @@ export default {
       try {
         await updateGoods(goods.id, { ...goods, status: next })
         goods.status = next
-        ElMessage.success(next === '在售' ? '已重新上架' : '已下架，广场不再展示')
+        ElMessage.success(next === '在售' ? '宝贝已重新上架' : '宝贝已下架，将不再展示于集市')
       } catch (err) {
         ElMessage.error(err.message || '操作失败，请稍后再试')
       } finally {
@@ -117,7 +117,7 @@ export default {
     async removeGoods(goods) {
       try {
         await ElMessageBox.confirm(
-          `确定删除「${goods.title}」吗？删除后不可恢复。`,
+          `确认下架并删除「${goods.title}」？该操作不可撤销。`,
           '删除确认',
           { type: 'warning' }
         )

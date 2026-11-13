@@ -9,41 +9,41 @@
 <template>
   <el-dialog
     :model-value="modelValue"
-    :title="isEdit ? '编辑闲置信息' : '发布闲置'"
+    :title="isEdit ? '编辑宝贝信息' : '发布宝贝'"
     width="560px"
     :close-on-click-modal="false"
     @update:model-value="$emit('update:modelValue', $event)"
     @open="initForm"
   >
     <el-form ref="formRef" :model="form" :rules="rules" label-width="84px">
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="宝贝标题" prop="title">
         <el-input
           v-focus
           v-model.trim="form.title"
           maxlength="40"
           show-word-limit
-          placeholder="一句话描述你的闲置，如：罗技 K380 蓝牙键盘"
+          placeholder="一句话概括宝贝亮点，如：罗技 K380 蓝牙键盘 九成新"
         />
       </el-form-item>
 
-      <el-form-item label="分类" prop="category">
+      <el-form-item label="所属分类" prop="category">
         <el-select v-model="form.category" style="width: 100%">
           <el-option v-for="item in categories" :key="item.name" :label="`${item.icon} ${item.name}`" :value="item.name" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="价格" prop="price">
+      <el-form-item label="售价" prop="price">
         <el-input-number v-model="form.price" :min="0.5" :max="99999" :precision="0" style="width: 180px" />
-        <span class="form-tip">校内面交，免运费</span>
+        <span class="form-tip">校内当面交付 · 零运费</span>
       </el-form-item>
 
-      <el-form-item label="新旧程度" prop="condition">
+      <el-form-item label="成色" prop="condition">
         <el-radio-group v-model="form.condition">
           <el-radio-button v-for="item in conditions" :key="item" :value="item">{{ item }}</el-radio-button>
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label="占位图" prop="emoji">
+      <el-form-item label="宝贝主图" prop="emoji">
         <div class="pick-row">
           <button
             v-for="item in EMOJIS"
@@ -69,14 +69,14 @@
         </div>
       </el-form-item>
 
-      <el-form-item label="描述" prop="desc">
+      <el-form-item label="宝贝详情" prop="desc">
         <el-input
           v-model.trim="form.desc"
           type="textarea"
           :rows="3"
           maxlength="200"
           show-word-limit
-          placeholder="成色、购买渠道、瑕疵、面交地点等，写清楚更容易卖出"
+          placeholder="描述购买渠道、使用时长、瑕疵情况与交付地点，信息越完整越易成交"
         />
       </el-form-item>
     </el-form>
@@ -84,7 +84,7 @@
     <template #footer>
       <el-button @click="$emit('update:modelValue', false)">取消</el-button>
       <el-button type="primary" :loading="saving" @click="save">
-        {{ isEdit ? '保存修改' : '发布到广场' }}
+        {{ isEdit ? '保存修改' : '立即上架' }}
       </el-button>
     </template>
   </el-dialog>
@@ -194,7 +194,7 @@ export default {
           } else {
             // POST：sellerId 用当前登录同学的 id
             result = await createGoods({ ...this.form, sellerId: user.id })
-            ElMessage.success('发布成功，已上架到商品广场')
+            ElMessage.success('发布成功，宝贝已上架至闲置集市')
           }
           this.$emit('update:modelValue', false)
           this.$emit('saved', result)

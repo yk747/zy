@@ -16,9 +16,9 @@
       </router-view>
 
       <footer v-if="!$route.meta.hideChrome" class="app-footer">
-        <span>校园二手集市 · 闲置流转，变废为宝</span>
+        <span>校园二手集市 · 让闲置资产高效流转</span>
         <span class="dot">·</span>
-        <span>认证学生 · 校内面交 · 绿色循环</span>
+        <span>实名认证 · 当面验货 · 绿色循环</span>
       </footer>
     </div>
   </el-config-provider>

@@ -12,9 +12,9 @@
     <div class="page-head">
       <div>
         <h1>移动端集市</h1>
-        <p class="sub">手机逛集市，加购与电脑端实时同步，随时随地淘闲置。</p>
+        <p class="sub">手机端随时选购，加购与桌面端实时同步，随时随地完成交易。</p>
       </div>
-      <el-tag effect="plain">移动端 · 随时随地淘</el-tag>
+      <el-tag effect="plain">全渠道 · 随时随地交易</el-tag>
     </div>
 
     <el-row :gutter="18">
@@ -68,7 +68,7 @@
                 </template>
               </van-card>
 
-              <van-empty v-if="!filtered.length && !loading" description="没有找到闲置，换个关键词试试" />
+              <van-empty v-if="!filtered.length && !loading" description="暂无相关宝贝，试试其他关键词" />
             </div>
           </template>
 
@@ -94,7 +94,7 @@
             <!-- van-submit-bar：移动端下单栏 -->
             <van-submit-bar
               :price="Math.round(Number(current.price) * 100)"
-              button-text="立即购买"
+              button-text="立即下单"
               label="合计："
               @submit="buyNow"
             >
@@ -103,7 +103,7 @@
                   <van-button size="small" round :disabled="cart.has(current.id)" type="primary" plain @click="addToCart(current)">
                     {{ cart.has(current.id) ? '已在购物车' : '加入购物车' }}
                   </van-button>
-                  <span>先面交验货，再确认付款</span>
+                  <span>当面验货后再确认付款</span>
                 </div>
               </template>
             </van-submit-bar>
@@ -117,13 +117,13 @@
           </van-tabbar>
         </div>
 
-        <p class="small muted center">↑ 点卡片看详情，详情里可以加购或立即购买</p>
+        <p class="small muted center">↑ 点击卡片查看详情，可直接加购或下单</p>
       </el-col>
 
       <el-col :xs="24" :md="10">
         <div class="card">
           <h2>我的购物车</h2>
-          <p class="muted">手机上加购的闲置会与电脑端同步，选好就约面交。</p>
+          <p class="muted">移动端加购的宝贝与桌面端实时同步，随时可提交订单。</p>
           <div class="stats">
             <div class="stat">
               <span>购物车</span>
@@ -134,15 +134,15 @@
               <b>￥{{ totalPrice.toFixed(0) }}</b>
             </div>
           </div>
-          <el-button type="primary" @click="$router.push('/cart')">去购物车约面交</el-button>
+          <el-button type="primary" @click="$router.push('/cart')">前往购物车结算</el-button>
         </div>
 
         <div class="card card--accent">
-          <h2>使用说明</h2>
+          <h2>移动端服务说明</h2>
           <p class="muted small">
-            这是题目 G3 的移动端买家场景：商品广场（van-card 列表 + van-search 搜索 +
-            van-tag 标签）→ 宝贝详情（van-submit-bar 提交栏）。购物车、收藏与桌面端
-            共用同一份 Pinia 仓库并持久化到 localStorage，刷新不丢。
+            移动端提供完整的选购与下单链路：闲置集市列表（分类筛选 + 关键词搜索）→
+            宝贝详情（价格、成色、卖家信息）→ 加入购物车或立即下单。
+            购物车与收藏在移动端、桌面端实时同步并本地留存，刷新不丢失。
           </p>
         </div>
       </el-col>
@@ -224,7 +224,7 @@ export default {
     addToCart(goods) {
       const ok = this.cart.add(goods, this.sellerName(goods.sellerId))
       ElMessage[ok ? 'success' : 'warning'](
-        ok ? '已加入购物车' : '这件宝贝已经在购物车里啦'
+        ok ? '已加入购物车' : '该宝贝已在购物车中'
       )
     },
     toggleFavorite(goods) {

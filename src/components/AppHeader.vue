@@ -23,10 +23,10 @@
         router
       >
         <el-menu-item index="/market">
-          <el-icon><Shop /></el-icon>商品广场
+          <el-icon><Shop /></el-icon>闲置集市
         </el-menu-item>
         <el-menu-item index="/publish">
-          <el-icon><CirclePlus /></el-icon>发布闲置
+          <el-icon><CirclePlus /></el-icon>发布宝贝
         </el-menu-item>
         <el-menu-item index="/cart">
           <el-icon><ShoppingCart /></el-icon>购物车
@@ -49,8 +49,8 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item disabled>同学你好：{{ name }}（{{ dorm || '校内面交' }}）</el-dropdown-item>
-              <el-dropdown-item divided command="goods">我的发布</el-dropdown-item>
+              <el-dropdown-item disabled>欢迎回来：{{ name }}（{{ dorm || '校内当面交付' }}）</el-dropdown-item>
+              <el-dropdown-item divided command="goods">我发布的宝贝</el-dropdown-item>
               <el-dropdown-item command="orders">我的订单</el-dropdown-item>
               <el-dropdown-item command="cart">购物车</el-dropdown-item>
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>

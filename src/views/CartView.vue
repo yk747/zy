@@ -9,14 +9,14 @@
     <div class="page-head">
       <div>
         <h1>购物车</h1>
-        <p class="sub">看好的闲置先放进车，约好时间地点一次面交全带走。</p>
+        <p class="sub">已选宝贝支持一键下单，校园当面交付更安心。</p>
       </div>
       <div class="head-actions">
         <el-tag :type="serverState.online === false ? 'warning' : 'success'" effect="plain">
-          {{ serverState.online === false ? '离线体验' : '在线服务' }}
+          {{ serverState.online === false ? '离线模式' : '在线服务' }}
         </el-tag>
         <el-button @click="$router.push('/market')">
-          <el-icon><Plus /></el-icon>继续逛逛
+          <el-icon><Plus /></el-icon>继续选购
         </el-button>
       </div>
     </div>
@@ -31,8 +31,8 @@
     />
 
     <div v-if="isEmpty" class="card card--plain empty-card">
-      <el-empty description="购物车还是空的，去广场淘几件闲置吧">
-        <el-button type="primary" @click="$router.push('/market')">去逛广场</el-button>
+      <el-empty description="购物车暂无宝贝，去闲置集市挑选心仪好物吧">
+        <el-button type="primary" @click="$router.push('/market')">去逛集市</el-button>
       </el-empty>
     </div>
 
@@ -40,7 +40,7 @@
       <div class="cart-layout">
         <div class="card card--plain cart-list">
           <div class="list-head">
-            <h2>已选闲置（{{ items.length }} 件）</h2>
+            <h2>已选宝贝（{{ items.length }} 件）</h2>
             <el-button link type="danger" @click="clearAll">清空购物车</el-button>
           </div>
 
@@ -51,7 +51,7 @@
 
             <div class="item-main">
               <b class="item-name" @click="goDetail(item.id)">{{ item.title }}</b>
-              <span class="small muted">卖家：{{ item.sellerName }} · 孤品一件</span>
+              <span class="small muted">卖家：{{ item.sellerName }} · 仅此一件</span>
             </div>
 
             <div class="subtotal">￥{{ Number(item.price).toFixed(0) }}</div>
@@ -61,42 +61,42 @@
         </div>
 
         <aside class="card summary">
-          <h2>交易信息</h2>
-          <div class="sum-row"><span>闲置件数</span><b>{{ totalCount }} 件</b></div>
+          <h2>订单信息</h2>
+          <div class="sum-row"><span>宝贝件数</span><b>{{ totalCount }} 件</b></div>
           <div class="sum-row"><span>合计金额</span><b class="price">￥{{ totalPrice.toFixed(0) }}</b></div>
-          <div class="sum-row"><span>运费</span><b>面交免运费</b></div>
+          <div class="sum-row"><span>运费</span><b>当面交付 · 免运费</b></div>
           <el-button type="primary" size="large" class="checkout-btn" @click="openCheckout">
-            约面交下单（{{ totalCount }} 件）
+            立即下单（{{ totalCount }} 件）
           </el-button>
           <p class="small muted store-tip">
-            提交后会生成订单记录，请当面验货后再付款给卖家。
+            提交后生成订单，请在当面验货确认后付款给卖家。
           </p>
         </aside>
       </div>
     </template>
 
     <!-- 面交信息弹窗：表单校验 -->
-    <el-dialog v-model="checkoutVisible" title="确认面交信息" width="540px" :close-on-click-modal="false">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="联系方式" prop="contact">
-          <el-input v-focus v-model.trim="form.contact" maxlength="11" placeholder="手机号，方便卖家联系你" clearable />
+    <el-dialog v-model="checkoutVisible" title="确认订单信息" width="540px" :close-on-click-modal="false">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="88px">
+        <el-form-item label="联系电话" prop="contact">
+          <el-input v-focus v-model.trim="form.contact" maxlength="11" placeholder="请输入手机号，便于卖家与您联系" clearable />
         </el-form-item>
-        <el-form-item label="面交地点" prop="place">
+        <el-form-item label="交付地点" prop="place">
           <el-input v-model.trim="form.place" placeholder="如：东区食堂门口 / 图书馆二楼" clearable />
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.note" placeholder="选填，如：今晚 7 点后都可以" />
+        <el-form-item label="订单备注">
+          <el-input v-model="form.note" placeholder="选填，如：今晚 7 点后均可交付" />
         </el-form-item>
       </el-form>
 
       <div class="order-preview">
-        <span>共 {{ totalCount }} 件闲置 · 校内面交免运费</span>
+        <span>共 {{ totalCount }} 件宝贝 · 当面交付免运费</span>
         <b>合计 ￥{{ totalPrice.toFixed(0) }}</b>
       </div>
 
       <template #footer>
         <el-button @click="checkoutVisible = false">取消</el-button>
-        <el-button type="primary" :loading="submitting" @click="submitOrder">提交订单</el-button>
+        <el-button type="primary" :loading="submitting" @click="submitOrder">确认下单</el-button>
       </template>
     </el-dialog>
   </div>
@@ -177,7 +177,7 @@ export default {
           })
           useCartStore().clear()
           this.checkoutVisible = false
-          ElMessage.success(`下单成功，订单号 ${order.orderNo}，去联系卖家面交吧`)
+          ElMessage.success(`下单成功，订单号 ${order.orderNo}，请尽快与卖家确认交付`)
           this.$router.push('/center/my-orders')
         } catch (err) {
           ElMessage.error(err.message || '下单失败，请稍后再试')

@@ -73,7 +73,7 @@ function writeLocalOrders(list) {
 function markOffline() {
   serverState.online = false
   serverState.message =
-    'json-server 接口（3001 端口）未连接，已切换到本地演示模式：发布、收藏、下单照常可用，启动后端后刷新即可同步。'
+    '网络服务暂时不可用，已进入离线浏览模式：发布、收藏与下单仍可体验，服务恢复后刷新页面即可同步。'
 }
 
 function markOnline() {

@@ -8,7 +8,7 @@
 <template>
   <div class="page">
     <el-button link class="back" @click="$router.back()">
-      <el-icon><ArrowLeft /></el-icon>返回上一页
+      <el-icon><ArrowLeft /></el-icon>返回
     </el-button>
 
     <div v-if="loading" v-loading="true" class="loading-box" element-loading-text="正在加载宝贝信息…"></div>
@@ -25,7 +25,7 @@
             <div v-for="n in 3" :key="n" class="thumb" :style="{ background: goods.gradient }">
               {{ goods.emoji }}
             </div>
-            <div class="thumb thumb--more">实拍图面交看货</div>
+            <div class="thumb thumb--more">多角度实拍</div>
           </div>
         </div>
 
@@ -40,13 +40,13 @@
 
           <div class="price-box">
             <span class="price big"><small>￥</small>{{ Number(goods.price).toFixed(0) }}</span>
-            <span class="muted small">校内面交 · 免运费</span>
+            <span class="muted small">校园当面交易 · 极速交付</span>
           </div>
 
-          <p class="desc">{{ goods.desc || '卖家很懒，没有留下描述，面交时慢慢看吧。' }}</p>
+          <p class="desc">{{ goods.desc || '卖家暂未填写宝贝描述，具体成色可当面验货确认。' }}</p>
 
           <div class="meta-row">
-            <span>发布时间 <b>{{ goods.createdAt || '—' }}</b></span>
+            <span>上架时间 <b>{{ goods.createdAt || '—' }}</b></span>
             <span>宝贝编号 <b>{{ goods.id }}</b></span>
           </div>
 
@@ -54,11 +54,11 @@
           <div class="seller">
             <el-avatar :size="42" class="seller-avatar">{{ seller.name?.slice(0, 1) || '同' }}</el-avatar>
             <div class="seller-main">
-              <b>{{ seller.name || '同学' }} <el-tag size="small" effect="plain">认证学生</el-tag></b>
-              <span class="small muted">宿舍：{{ seller.dorm || '面交时协商' }} · 在售 {{ sellerGoodsCount }} 件</span>
+              <b>{{ seller.name || '同学' }} <el-tag size="small" effect="plain">实名认证</el-tag></b>
+              <span class="small muted">校区：{{ seller.dorm || '交付地点可协商' }} · 在售 {{ sellerGoodsCount }} 件</span>
             </div>
             <el-button size="small" round @click="contactSeller">
-              <el-icon><ChatDotRound /></el-icon>联系卖家
+              <el-icon><ChatDotRound /></el-icon>咨询卖家
             </el-button>
           </div>
 
@@ -71,7 +71,7 @@
             >
               <el-icon><ShoppingCart /></el-icon>{{ cart.has(goods.id) ? '已在购物车' : '加入购物车' }}
             </el-button>
-            <el-button size="large" :disabled="goods.status === '下架'" @click="buyNow">立即购买</el-button>
+            <el-button size="large" :disabled="goods.status === '下架'" @click="buyNow">立即下单</el-button>
             <el-button size="large" :type="favorite.has(goods.id) ? 'warning' : 'default'" plain @click="toggleFavorite">
               <el-icon><Star /></el-icon>{{ favorite.has(goods.id) ? '已收藏' : '收藏' }}
             </el-button>
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <SectionCard title="同分类闲置" subtitle="逛逛同类的其他宝贝" plain>
+      <SectionCard title="同类好物推荐" subtitle="为你精选的同类优质宝贝" plain>
         <div class="related-grid">
           <div v-for="item in related" :key="item.id" class="mini-product" @click="openGoods(item.id)">
             <div class="mini-cover" :style="{ background: item.gradient }">{{ item.emoji }}</div>
@@ -90,12 +90,12 @@
             <el-icon class="mini-arrow"><ArrowRight /></el-icon>
           </div>
         </div>
-        <el-empty v-if="!related.length" description="同分类暂无其他闲置" :image-size="70" />
+        <el-empty v-if="!related.length" description="该品类暂无其他在售宝贝" :image-size="70" />
       </SectionCard>
     </template>
 
-    <el-empty v-else description="没有找到这件闲置，可能已被卖家删除">
-      <el-button type="primary" @click="$router.push('/market')">回到商品广场</el-button>
+    <el-empty v-else description="该宝贝已下架或不存在，看看其他好物吧">
+      <el-button type="primary" @click="$router.push('/market')">返回闲置集市</el-button>
     </el-empty>
   </div>
 </template>
@@ -161,7 +161,7 @@ export default {
     },
     addToCart() {
       const ok = this.cart.add(this.goods, this.seller.name || '同学')
-      ElMessage[ok ? 'success' : 'warning'](ok ? '已加入购物车' : '这件宝贝已经在购物车里啦')
+      ElMessage[ok ? 'success' : 'warning'](ok ? '已加入购物车' : '该宝贝已在购物车中')
     },
     buyNow() {
       this.cart.add(this.goods, this.seller.name || '同学')
@@ -172,7 +172,7 @@ export default {
       ElMessage[added ? 'success' : 'info'](added ? '已收藏' : '已取消收藏')
     },
     contactSeller() {
-      ElMessage.info(`可以到「${this.seller.dorm || '校内'}」找 ${this.seller.name || '同学'} 面交看货`)
+      ElMessage.info(`可前往「${this.seller.dorm || '校内'}」与 ${this.seller.name || '卖家'} 当面验货交易`)
     },
     openGoods(id) {
       this.$router.push({ name: 'goods-detail', params: { id } })

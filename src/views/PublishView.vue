@@ -7,45 +7,45 @@
   <div class="page">
     <div class="page-head">
       <div>
-        <h1>发布闲置</h1>
-        <p class="sub">填几句描述，拍照不如选个 emoji 占位图，买家面交时再看实物。</p>
+        <h1>发布宝贝</h1>
+        <p class="sub">完善宝贝信息，信息越完整，曝光与成交率越高。</p>
       </div>
-      <el-tag effect="plain">发布即上架到商品广场</el-tag>
+      <el-tag effect="plain">提交后即刻上架 · 全程免费</el-tag>
     </div>
 
     <el-row :gutter="18">
       <el-col :xs="24" :md="14">
         <div class="card publish-card">
-          <h2>闲置信息</h2>
-          <p class="muted small">带 * 为必填项；标题写清品牌型号，更容易被搜索到。</p>
+          <h2>宝贝信息</h2>
+          <p class="muted small">带 * 为必填项；标题注明品牌与型号，更容易被买家搜索到。</p>
 
           <GoodsFormDialog ref="publishDialogRef" v-model="dialogVisible" :goods="null" @saved="onSaved" />
 
           <el-button type="primary" size="large" class="open-btn" @click="dialogVisible = true">
-            <el-icon><CirclePlus /></el-icon>打开发布表单
+            <el-icon><CirclePlus /></el-icon>完善宝贝信息
           </el-button>
 
           <div v-if="lastSaved" class="saved-tip">
             <el-icon><CircleCheck /></el-icon>
             <div>
-              <b>「{{ lastSaved.title }}」已发布成功</b>
+              <b>「{{ lastSaved.title }}」已成功上架</b>
               <span class="small muted">编号 {{ lastSaved.id }} · 分类 {{ lastSaved.category }} · ￥{{ lastSaved.price }}</span>
             </div>
-            <el-button size="small" type="primary" plain @click="$router.push('/center/my-goods')">查看我的发布</el-button>
+            <el-button size="small" type="primary" plain @click="$router.push('/center/my-goods')">管理我发布的宝贝</el-button>
           </div>
         </div>
       </el-col>
 
       <el-col :xs="24" :md="10">
-        <SectionCard title="发布小贴士" subtitle="好描述 = 快成交">
+        <SectionCard title="发布建议" subtitle="高质量描述助力快速成交">
           <ul class="tips">
-            <li>标题写清「品牌 + 型号 + 成色」，比如「罗技 K380 粉色 九成新」；</li>
-            <li>价格参考新品价打 3—6 折，孤品好物可以写清「不刀」；</li>
-            <li>瑕疵要如实描述（划痕、缺配件），面交看货时不尴尬；</li>
-            <li>约定面交地点建议选食堂、快递柜等人多的公共区域。</li>
+            <li>标题建议包含「品牌 + 型号 + 成色」，如「罗技 K380 键盘 九成新」，命中率更高；</li>
+            <li>定价可参考新品价 3—6 折，稀缺款可标注「谢绝还价」，减少沟通成本；</li>
+            <li>瑕疵如实告知（划痕、缺件），提升买家信任度与成交效率；</li>
+            <li>交付地点建议选择食堂、快递驿站等公共区域，安全便捷。</li>
           </ul>
           <template #footer>
-            交易双方均为本校认证学生 · 平台仅提供信息展示，请当面验货
+            交易双方均为实名认证用户 · 平台提供信息撮合服务，请当面验货后再付款
           </template>
         </SectionCard>
       </el-col>

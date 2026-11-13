@@ -6,12 +6,12 @@
     <p class="code">404</p>
     <h2>这个页面走丢了</h2>
     <p class="muted">
-      没有找到 <code>{{ $route.fullPath }}</code> 对应的页面，
-      可能是地址拼错了，或者这件闲置已经下架。
+      页面 <code>{{ $route.fullPath }}</code> 不存在，
+      可能是链接有误，或该宝贝已下架。
     </p>
     <div class="actions">
-      <el-button type="primary" @click="$router.push('/market')">回商品广场</el-button>
-      <el-button @click="$router.push('/publish')">去发布闲置</el-button>
+      <el-button type="primary" @click="$router.push('/market')">返回闲置集市</el-button>
+      <el-button @click="$router.push('/publish')">去发布宝贝</el-button>
     </div>
   </div>
 </template>

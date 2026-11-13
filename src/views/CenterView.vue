@@ -10,10 +10,10 @@
     <div class="page-head">
       <div>
         <h1>个人中心</h1>
-        <p class="sub">{{ name }}，欢迎回到集市！卖闲置、看订单都在这里。</p>
+        <p class="sub">{{ name }}，欢迎回来。在这里管理宝贝资产、跟踪订单进度。</p>
       </div>
       <el-button type="primary" @click="$router.push('/publish')">
-        <el-icon><CirclePlus /></el-icon>发布闲置
+        <el-icon><CirclePlus /></el-icon>发布宝贝
       </el-button>
     </div>
 
@@ -27,7 +27,7 @@
       <aside class="side-menu">
         <el-menu :default-active="activePath" router>
           <el-menu-item index="/center/my-goods">
-            <el-icon><Sell /></el-icon>我的发布
+            <el-icon><Sell /></el-icon>我的宝贝
           </el-menu-item>
           <el-menu-item index="/center/my-orders">
             <el-icon><Tickets /></el-icon>我的订单

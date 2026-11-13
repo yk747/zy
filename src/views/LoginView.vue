@@ -31,34 +31,34 @@
             <b>校园二手集市</b>
             <small>CAMPUS MARKET</small>
           </div>
-          <span class="brand-pill">闲置流转 · 变废为宝</span>
+          <span class="brand-pill">校园严选 · 极速成交</span>
         </div>
 
-        <h1>学长学姐的闲置<br />一键淘回家</h1>
+        <h1>让校园闲置<br />高效流转起来</h1>
 
         <ul class="feature-list">
           <li>
             <span class="feature-icon"><el-icon><Shop /></el-icon></span>
-            商品广场分类清晰，关键词一搜就到
+            智能分类精准匹配，所需好物一搜即达
           </li>
           <li>
             <span class="feature-icon"><el-icon><CirclePlus /></el-icon></span>
-            三分钟发布闲置，管理上下架随时改
+            60 秒极速发布，宝贝状态实时可控
           </li>
           <li>
             <span class="feature-icon"><el-icon><ShoppingCart /></el-icon></span>
-            购物车收藏本地保存，刷新不丢失
+            收藏与购物车状态留存，进度不丢失
           </li>
           <li>
             <span class="feature-icon"><el-icon><Iphone /></el-icon></span>
-            手机端集市同步逛，面交信息随行查
+            移动端全渠道覆盖，订单进度随行可查
           </li>
         </ul>
 
         <div class="metric-row">
-          <div><b>{{ metrics.goods }}</b><span>在架闲置</span></div>
-          <div><b>{{ metrics.categories }}</b><span>闲置分类</span></div>
-          <div><b>{{ metrics.users }}</b><span>认证同学</span></div>
+          <div><b>{{ metrics.goods }}</b><span>在售宝贝</span></div>
+          <div><b>{{ metrics.categories }}</b><span>品类覆盖</span></div>
+          <div><b>{{ metrics.users }}</b><span>认证用户</span></div>
         </div>
 
         <div class="showcase">
@@ -73,7 +73,7 @@
           </div>
           <div class="showcase-label">
             <span class="pulse"></span>
-            热门闲置 · 校内面交免运费
+            平台严选 · 当面验货更安心
           </div>
         </div>
       </section>
@@ -83,7 +83,7 @@
         <div class="card-head">
           <span class="hello-chip">{{ greeting }}</span>
           <h2>欢迎来到校园二手集市</h2>
-          <p class="muted">登录后即可发布闲置、收藏加购与查看订单</p>
+          <p class="muted">登录后可发布宝贝、管理收藏并跟踪订单进度</p>
         </div>
 
         <el-form
@@ -100,7 +100,7 @@
               v-model.trim="form.username"
               size="large"
               maxlength="12"
-              placeholder="请输入昵称，如：小杨"
+              placeholder="请输入昵称"
               aria-label="昵称"
               autocomplete="username"
               :disabled="loading"
@@ -116,7 +116,7 @@
               v-model="form.password"
               size="large"
               type="password"
-              placeholder="请输入密码（默认 123456）"
+              placeholder="请输入密码"
               aria-label="密码"
               autocomplete="current-password"
               show-password
@@ -129,7 +129,7 @@
 
           <div class="form-row">
             <el-tooltip content="勾选后下次打开集市无需重新登录" placement="top">
-              <el-checkbox v-model="autoLogin" :disabled="loading">下次自动登录</el-checkbox>
+              <el-checkbox v-model="autoLogin" :disabled="loading">七天内自动登录</el-checkbox>
             </el-tooltip>
             <el-button link type="primary" size="small" @click="showPasswordTip">忘记密码？</el-button>
           </div>
@@ -150,25 +150,12 @@
 
         <el-button class="quick" size="large" :disabled="loading" @click="quickLogin">
           <el-icon><MagicStick /></el-icon>
-          一键体验（体验同学）
+          免费体验（演示账号）
         </el-button>
-
-        <div class="quick-accounts">
-          <span class="qa-label">快捷账号</span>
-          <button
-            v-for="acc in quickAccounts"
-            :key="acc"
-            type="button"
-            class="qa-chip"
-            @click="fillAccount(acc)"
-          >
-            {{ acc }}
-          </button>
-        </div>
       </section>
     </div>
 
-    <footer class="foot">认证学生 · 校内面交 · 闲置流转</footer>
+    <footer class="foot">实名认证 · 当面验货 · 全程保障</footer>
   </div>
 </template>
 
@@ -228,9 +215,6 @@ export default {
       if (hour < 18) return '下午好，同学'
       return '晚上好，同学'
     },
-    quickAccounts() {
-      return USER_SEED.map((user) => user.name)
-    }
   },
   watch: {
     // 勾选状态变化立即保存，下次进入登录页自动恢复
@@ -239,13 +223,6 @@ export default {
     }
   },
   methods: {
-    // 点快捷账号芯片：回填昵称与密码
-    fillAccount(name) {
-      if (this.loading) return
-      this.form.username = name
-      this.form.password = '123456'
-      this.$nextTick(() => this.$refs.formRef?.clearValidate())
-    },
     saveLoginOpts() {
       localStorage.setItem(
         LOGIN_OPTS_KEY,
@@ -261,9 +238,12 @@ export default {
     },
     showPasswordTip() {
       ElMessageBox.alert(
-        '集市内置了 6 位认证同学的体验账号（如 小杨 / 小刘 / 小郭），密码统一为 123456。',
+        '集市账号为学校认证账号，密码由本人设置。如需重置密码，请携带学生证前往信息中心，或联系班级管理员协助处理。',
         '忘记密码',
-        { confirmButtonText: '知道了', type: 'info' }
+        {
+          confirmButtonText: '知道了',
+          type: 'info'
+        }
       )
     },
     submit() {
@@ -281,18 +261,18 @@ export default {
           const matched = users.find((user) => user.name === this.form.username)
 
           if (!matched) {
-            ElMessage.error('集市里没有这位同学，试试「一键体验」或输入 小杨')
+            ElMessage.error('账号不存在，请核对昵称或使用演示账号体验')
             return
           }
           if (matched.password !== this.form.password) {
-            ElMessage.error('密码不对，体验账号密码统一为 123456')
+            ElMessage.error('密码不正确，请重新输入')
             return
           }
 
           const user = useUserStore()
           // 勾选自动登录 → token 写入 localStorage，重启项目仍然有效
           user.login(matched, this.autoLogin)
-          ElMessage.success(`欢迎来到校园二手集市，${matched.name}`)
+          ElMessage.success(`登录成功，欢迎回来，${matched.name}`)
 
           // redirect 只接受站内路径，避免跳到非法地址
           const redirect = this.$route.query.redirect
@@ -831,40 +811,6 @@ export default {
   color: #fff;
   border-color: var(--primary);
   background: var(--primary);
-}
-
-/* ---------- 快捷账号芯片 ---------- */
-.quick-accounts {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 12px;
-}
-
-.qa-label {
-  font-size: 11px;
-  color: var(--muted);
-  margin-right: 2px;
-}
-
-.qa-chip {
-  padding: 3px 12px;
-  margin: 0;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--text);
-  font-size: 12px;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.15s;
-}
-
-.qa-chip:hover {
-  color: var(--primary-dark);
-  border-color: #bfe8d4;
-  background: #f2fbf7;
-  transform: translateY(-1px);
 }
 
 .foot {

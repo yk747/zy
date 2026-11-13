@@ -9,11 +9,11 @@
   <div class="page">
     <div class="page-head">
       <div>
-        <h1>商品广场</h1>
-        <p class="sub">学长学姐的闲置好物，校内面交，淘到就是赚到。</p>
+        <h1>闲置集市</h1>
+        <p class="sub">平台严选校内优质闲置，价格透明，当面验货更安心。</p>
       </div>
       <el-button type="primary" @click="$router.push('/publish')">
-        <el-icon><CirclePlus /></el-icon>发布闲置
+        <el-icon><CirclePlus /></el-icon>发布宝贝
       </el-button>
     </div>
 
@@ -29,10 +29,10 @@
     <div class="hero card">
       <SearchBar v-model="keyword" @search="onSearch" />
       <el-select v-model="sort" class="sort-select" size="large">
-        <el-option label="默认排序" value="default" />
-        <el-option label="最新发布" value="new" />
-        <el-option label="价格从低到高" value="price-asc" />
-        <el-option label="价格从高到低" value="price-desc" />
+        <el-option label="综合排序" value="default" />
+        <el-option label="最新上架" value="new" />
+        <el-option label="价格由低到高" value="price-asc" />
+        <el-option label="价格由高到低" value="price-desc" />
       </el-select>
     </div>
 
@@ -69,8 +69,8 @@
           @fav="toggleFavorite"
         />
       </div>
-      <el-empty v-else-if="!loading" description="没有找到匹配的闲置，换个关键词试试">
-        <el-button type="primary" @click="resetFilter">重置筛选</el-button>
+      <el-empty v-else-if="!loading" description="暂无相关宝贝，试试其他关键词或筛选条件">
+        <el-button type="primary" @click="resetFilter">清空筛选条件</el-button>
       </el-empty>
     </div>
   </div>
@@ -116,7 +116,7 @@ export default {
     statCards() {
       const onSale = this.goodsList.filter((item) => item.status === '在售')
       return [
-        { title: '在售闲置', value: onSale.length, unit: '件', icon: 'Shop', tone: 'green' },
+        { title: '在售宝贝', value: onSale.length, unit: '件', icon: 'Shop', tone: 'green' },
         { title: '我的收藏', value: this.favCount, unit: '件', icon: 'Star', tone: 'amber' },
         { title: '购物车', value: this.cartCount, unit: '件', icon: 'ShoppingCart', tone: 'orange' }
       ]
@@ -180,7 +180,7 @@ export default {
     addToCart(goods) {
       const ok = this.cart.add(goods, this.sellerName(goods.sellerId))
       ElMessage[ok ? 'success' : 'warning'](
-        ok ? `「${goods.title.slice(0, 12)}…」已加入购物车` : '这件宝贝已经在购物车里啦'
+        ok ? `「${goods.title.slice(0, 12)}…」已加入购物车` : '该宝贝已在购物车中'
       )
     },
     toggleFavorite(goods) {

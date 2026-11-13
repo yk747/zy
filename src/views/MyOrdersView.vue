@@ -6,11 +6,11 @@
 <template>
   <div class="my-orders">
     <el-tabs v-model="tab">
-      <el-tab-pane label="我买到的" name="bought" />
-      <el-tab-pane label="我卖出的" name="sold" />
+      <el-tab-pane label="我购买的" name="bought" />
+      <el-tab-pane label="我售出的" name="sold" />
     </el-tabs>
 
-    <div v-loading="loading" class="orders-area" element-loading-text="正在加载订单…">
+    <div v-loading="loading" class="orders-area" element-loading-text="正在加载订单数据…">
       <template v-if="currentOrders.length">
         <div v-for="order in currentOrders" :key="order.id" class="order-item">
           <div class="head">
@@ -35,7 +35,7 @@
           <div class="foot">
             <span class="small muted">
               <el-icon><Location /></el-icon>
-              面交地点：{{ order.place }} · 联系方式：{{ order.contact }}
+              交付地点：{{ order.place }} · 联系电话：{{ order.contact }}
               <template v-if="order.note"> · 备注：{{ order.note }}</template>
             </span>
             <span class="total">
@@ -47,16 +47,16 @@
                 :loading="confirmingId === order.id"
                 @click="confirmOrder(order)"
               >
-                确认完成
+                确认收货
               </el-button>
             </span>
           </div>
         </div>
       </template>
 
-      <el-empty v-else-if="!loading" :description="tab === 'bought' ? '还没有买到闲置，先去广场逛逛' : '还没有同学买你的闲置，多发布几件试试'">
+      <el-empty v-else-if="!loading" :description="tab === 'bought' ? '暂无购买记录，去集市挑选心动好物' : '暂无售出记录，丰富宝贝信息可提升曝光'">
         <el-button type="primary" @click="$router.push(tab === 'bought' ? '/market' : '/publish')">
-          {{ tab === 'bought' ? '去逛广场' : '去发布闲置' }}
+          {{ tab === 'bought' ? '去逛集市' : '去发布宝贝' }}
         </el-button>
       </el-empty>
     </div>
@@ -115,7 +115,7 @@ export default {
       this.confirmingId = order.id
       try {
         await useOrderStore().completeOrder(order.id)
-        ElMessage.success('订单已完成，记得给卖家一个好评')
+        ElMessage.success('已确认收货，交易完成，感谢您的信任')
       } catch (err) {
         ElMessage.error(err.message || '操作失败，请稍后再试')
       } finally {
