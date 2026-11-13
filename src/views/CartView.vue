@@ -12,7 +12,14 @@
         <p class="sub">已选宝贝支持一键下单，校园当面交付更安心。</p>
       </div>
       <div class="head-actions">
-        <el-tag v-if="serverState.online" type="success" effect="plain">在线服务</el-tag>
+        <el-tooltip
+          v-if="serverState.online === false"
+          content="未连接本地接口，数据仅保存在当前浏览器"
+          placement="bottom"
+        >
+          <el-tag type="info" effect="plain">演示模式</el-tag>
+        </el-tooltip>
+        <el-tag v-else-if="serverState.online" type="success" effect="plain">在线服务</el-tag>
         <el-button @click="$router.push('/market')">
           <el-icon><Plus /></el-icon>继续选购
         </el-button>

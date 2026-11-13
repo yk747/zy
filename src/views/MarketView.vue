@@ -9,7 +9,19 @@
   <div class="page">
     <div class="page-head">
       <div>
-        <h1>闲置集市</h1>
+        <div class="title-row">
+          <h1>闲置集市</h1>
+          <el-tooltip
+            v-if="serverState.online === false"
+            content="未连接本地接口，数据仅保存在当前浏览器"
+            placement="right"
+          >
+            <el-tag type="info" effect="plain" size="small" round>演示模式</el-tag>
+          </el-tooltip>
+          <el-tag v-else-if="serverState.online" type="success" effect="plain" size="small" round>
+            在线服务
+          </el-tag>
+        </div>
         <p class="sub">平台严选校内优质闲置，价格透明，当面验货更安心。</p>
       </div>
       <el-button type="primary" @click="$router.push('/publish')">
@@ -77,7 +89,7 @@ import { ElMessage } from 'element-plus'
 import SearchBar from '../components/SearchBar.vue'
 import GoodsCard from '../components/GoodsCard.vue'
 import StatCard from '../components/StatCard.vue'
-import { fetchGoods, fetchUsers } from '../api/goods'
+import { fetchGoods, fetchUsers, serverState } from '../api/goods'
 import { useCartStore } from '../store/cart'
 import { useFavoriteStore } from '../store/favorite'
 import { CATEGORIES } from '../../shared/goods.js'
@@ -87,6 +99,7 @@ export default {
   components: { SearchBar, GoodsCard, StatCard },
   data() {
     return {
+      serverState,
       goodsList: [],
       users: [],
       loading: true,
@@ -186,6 +199,16 @@ export default {
 </script>
 
 <style scoped>
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-row h1 {
+  margin: 0;
+}
+
 .hero {
   display: flex;
   flex-wrap: wrap;
