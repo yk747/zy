@@ -111,18 +111,21 @@ export default {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid rgba(229, 235, 231, 0.9);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 6px 20px rgba(16, 45, 34, 0.04);
 }
 
 .header-inner {
-  max-width: 1180px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
+  height: 64px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 18px;
 }
 
 .brand {
@@ -132,29 +135,36 @@ export default {
   cursor: pointer;
   user-select: none;
   flex-shrink: 0;
+  transition: transform 0.18s ease;
+}
+
+.brand:hover {
+  transform: translateY(-1px);
 }
 
 .logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(140deg, #22d39b 0%, #00b578 45%, #04835a 100%);
   color: #fff;
-  font-weight: 700;
+  font-weight: 800;
   display: grid;
   place-items: center;
-  font-size: 18px;
-  box-shadow: 0 4px 12px rgba(0, 181, 120, 0.3);
+  font-size: 19px;
+  box-shadow: 0 8px 18px rgba(0, 181, 120, 0.28), 0 1px 0 rgba(255, 255, 255, 0.4) inset;
 }
 
 .brand-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .brand-text b {
-  font-size: 15px;
+  font-size: 15.5px;
+  letter-spacing: 0.2px;
 }
 
 .brand-text small {
@@ -165,12 +175,45 @@ export default {
 
 .nav {
   flex: 1;
+  display: flex;
+  align-items: center;
+  height: 64px;
   border-bottom: none;
   min-width: 0;
+  background: transparent;
+  --el-menu-horizontal-height: 64px;
+  --el-menu-hover-bg-color: transparent;
+}
+
+.nav :deep(.el-menu) {
+  border-bottom: none;
 }
 
 .nav :deep(.el-menu-item) {
+  height: 38px;
+  line-height: 38px;
+  margin: 0 2px;
+  padding: 0 14px;
+  border-bottom: none !important;
+  border-radius: 10px;
   font-size: 14px;
+  color: var(--text-soft);
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.nav :deep(.el-menu-item:hover) {
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+}
+
+.nav :deep(.el-menu-item.is-active) {
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.nav :deep(.el-menu-item.is-active .el-icon) {
+  color: var(--primary);
 }
 
 .nav-badge {
@@ -190,14 +233,25 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border-radius: 999px;
   cursor: pointer;
   color: var(--text);
   outline: none;
+  border: 1px solid transparent;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.user-trigger:hover {
+  background: rgba(233, 247, 241, 0.9);
+  border-color: #d8ece2;
 }
 
 .avatar {
-  background: var(--primary);
+  background: linear-gradient(135deg, #22d39b, #059669);
   font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0, 181, 120, 0.24);
 }
 
 .user-name {

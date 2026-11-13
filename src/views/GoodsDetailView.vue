@@ -269,7 +269,7 @@ export default {
 }
 
 .thumb--more {
-  background: #fbfaf9 !important;
+  background: #f7faf8 !important;
   color: var(--muted);
   font-size: 11px;
   border: 1px dashed var(--border);
@@ -303,25 +303,28 @@ export default {
 .price-box {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  background: linear-gradient(90deg, #fff1e8, #fff9f4);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 12px;
+  gap: 14px;
+  background: linear-gradient(120deg, #fff3ea 0%, #fffaf6 58%, #f2fbf7 100%);
+  border: 1px solid #fbe4d5;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
 }
 
 .price.big {
-  font-size: 32px;
-  line-height: 1.1;
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
 }
 
 .desc {
-  color: #5f5650;
-  background: #fbfaf9;
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin: 0 0 12px;
-  line-height: 1.8;
+  color: var(--text-soft);
+  background: #f8faf9;
+  border: 1px solid #eef2f0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 0 0 14px;
+  line-height: 1.85;
 }
 
 .meta-row {

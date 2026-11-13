@@ -280,10 +280,11 @@ export default {
   margin: 0;
   position: sticky;
   top: 86px;
+  padding: 20px 22px 22px;
 }
 
 .summary h2 {
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .sum-row {
@@ -291,20 +292,33 @@ export default {
   align-items: baseline;
   justify-content: space-between;
   font-size: 13px;
-  padding: 5px 0;
+  padding: 9px 0;
   color: var(--muted);
+  border-bottom: 1px dashed #eef2f0;
+}
+
+.sum-row:last-of-type {
+  border-bottom: none;
 }
 
 .sum-row b {
   color: var(--text);
   font-size: 14px;
+  font-weight: 600;
+}
+
+.sum-row b.price {
+  font-size: 24px;
+  letter-spacing: -0.5px;
 }
 
 .checkout-btn {
   width: 100%;
-  height: 44px;
-  margin-top: 12px;
+  height: 46px;
+  margin-top: 14px;
   font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
 }
 
 .store-tip {
@@ -317,8 +331,9 @@ export default {
   align-items: center;
   justify-content: space-between;
   background: var(--primary-bg);
-  border-radius: 8px;
-  padding: 10px 14px;
+  border: 1px solid #d8f0e4;
+  border-radius: 12px;
+  padding: 12px 16px;
   font-size: 13px;
   color: var(--primary-dark);
 }

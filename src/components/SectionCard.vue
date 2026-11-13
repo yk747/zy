@@ -33,17 +33,22 @@ export default {
 
 <style scoped>
 .section-card {
+  position: relative;
   background: var(--card);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--primary);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 14px 18px 16px;
+  padding: 18px 22px 20px;
   margin: 14px 0;
+  transition: box-shadow 0.2s ease;
+}
+
+.section-card:hover {
+  box-shadow: var(--shadow-hover);
 }
 
 .section-card.is-plain {
-  border-left-color: var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .head {
@@ -51,10 +56,27 @@ export default {
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f4f1;
 }
 
 .head h2 {
   margin: 0 0 2px;
+}
+
+.head h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 15px;
+  margin-right: 9px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--primary-light), var(--primary-dark));
+  vertical-align: -2px;
+}
+
+.body {
+  padding-top: 14px;
 }
 
 .sub {

@@ -77,6 +77,7 @@ export default {
 <style scoped>
 .publish-card {
   min-height: 320px;
+  background: linear-gradient(180deg, #f7fcfa 0%, #ffffff 34%);
 }
 
 .publish-card h2 {
@@ -84,7 +85,8 @@ export default {
 }
 
 .open-btn {
-  margin-top: 16px;
+  margin-top: 18px;
+  border-radius: 12px;
 }
 
 .saved-tip {
@@ -92,10 +94,10 @@ export default {
   align-items: center;
   gap: 12px;
   margin-top: 18px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: var(--primary-bg);
-  border: 1px solid var(--border);
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(120deg, #eafaf2 0%, #f7fffb 100%);
+  border: 1px solid #cdeee0;
   color: var(--primary-dark);
 }
 
@@ -108,8 +110,16 @@ export default {
 .tips {
   margin: 0;
   padding-left: 18px;
-  color: #5f5650;
+  color: var(--text-soft);
   font-size: 13.5px;
   line-height: 2;
+}
+
+.tips li {
+  margin-bottom: 2px;
+}
+
+.tips li::marker {
+  color: var(--primary);
 }
 </style>

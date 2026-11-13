@@ -344,11 +344,12 @@ export default {
 .desc {
   margin: 0 0 10px;
   font-size: 13px;
-  color: #5f5650;
+  color: var(--text-soft);
   line-height: 1.8;
   background: #f7faf8;
-  border-radius: 8px;
-  padding: 8px 12px;
+  border: 1px solid #eef2f0;
+  border-radius: 10px;
+  padding: 10px 12px;
 }
 
 .seller {

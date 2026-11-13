@@ -17,11 +17,9 @@
       </el-button>
     </div>
 
-    <el-row :gutter="14">
-      <el-col v-for="item in statCards" :key="item.title" :xs="12" :md="6">
-        <StatCard v-bind="item" />
-      </el-col>
-    </el-row>
+    <div class="stat-grid">
+      <StatCard v-for="item in statCards" :key="item.title" v-bind="item" />
+    </div>
 
     <div class="center-layout">
       <aside class="side-menu">
@@ -82,24 +80,54 @@ export default {
 </script>
 
 <style scoped>
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0 4px;
+}
+
 .center-layout {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 16px;
+  grid-template-columns: 208px 1fr;
+  gap: 18px;
   align-items: start;
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
 .side-menu {
+  position: sticky;
+  top: 84px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
+  padding: 8px;
 }
 
-.side-menu .el-menu {
+.side-menu :deep(.el-menu) {
   border-right: none;
+}
+
+.side-menu :deep(.el-menu-item) {
+  height: 42px;
+  line-height: 42px;
+  margin: 2px 0;
+  border-radius: 10px;
+  color: var(--text-soft);
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.side-menu :deep(.el-menu-item:hover) {
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+}
+
+.side-menu :deep(.el-menu-item.is-active) {
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  font-weight: 600;
 }
 
 .center-body {
@@ -107,8 +135,16 @@ export default {
 }
 
 @media (max-width: 900px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .center-layout {
     grid-template-columns: 1fr;
+  }
+
+  .side-menu {
+    position: static;
   }
 
   .side-menu :deep(.el-menu) {
@@ -118,6 +154,12 @@ export default {
   .side-menu :deep(.el-menu-item) {
     flex: 1;
     justify-content: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
