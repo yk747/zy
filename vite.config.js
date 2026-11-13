@@ -10,7 +10,10 @@ import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from 'unplugin-vue-components/resolvers'
 import { defineConfig } from 'vite'
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  // GitHub Pages 项目站点在 /zy/ 子路径下，构建时必须带 base，否则资源 404；
+  // 本地 dev 仍用根路径，避免开发时访问要带 /zy/ 前缀
+  base: command === 'build' ? '/zy/' : '/',
   plugins: [
     vue(),
     Components({
@@ -28,4 +31,4 @@ export default defineConfig({
     port: 4173,
     strictPort: true
   }
-})
+}))

@@ -34,15 +34,36 @@ export default {
 
 <style scoped>
 .stat-card {
+  position: relative;
+  overflow: hidden;
   display: flex;
   gap: 14px;
-  align-items: flex-start;
+  align-items: center;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 16px 18px;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  right: -32px;
+  top: -32px;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--primary-bg);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.stat-icon,
+.stat-body {
+  position: relative;
+  z-index: 1;
 }
 
 .stat-card:hover {
@@ -71,10 +92,11 @@ export default {
 
 .stat-value {
   margin: 2px 0 0;
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 27px;
+  font-weight: 800;
   line-height: 1.2;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2px;
+  color: var(--text);
 }
 
 .stat-value small {

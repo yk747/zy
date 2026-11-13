@@ -45,15 +45,19 @@
         :class="{ active: category === item }"
         @click="category = item"
       >
-        {{ categoryIcon(item) }} {{ item }}
+        <span class="chip-ico">{{ categoryIcon(item) }}</span>
+        <span>{{ item }}</span>
       </button>
     </div>
 
-    <el-row :gutter="14">
-      <el-col v-for="item in statCards" :key="item.title" :xs="8">
-        <StatCard v-bind="item" />
-      </el-col>
-    </el-row>
+    <div class="stat-grid">
+      <StatCard v-for="item in statCards" :key="item.title" v-bind="item" />
+    </div>
+
+    <div class="result-bar">
+      <span class="result-title">精选好物</span>
+      <span class="result-count">共 <b>{{ filtered.length }}</b> 件在售</span>
+    </div>
 
     <div v-loading="loading" class="goods-area" element-loading-text="正在集市里翻找…">
       <div v-if="filtered.length" class="goods-grid">
@@ -193,7 +197,8 @@ export default {
 
 <style scoped>
 .offline-alert {
-  margin: 12px 0;
+  margin: 14px 0 0;
+  border-radius: 12px;
 }
 
 .hero {
@@ -201,22 +206,41 @@ export default {
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
-  margin-top: 14px;
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f3fbf7 100%);
+  border: 1px solid #dff0e8;
+}
+
+.hero :deep(.search-bar) {
+  flex: 1;
+  max-width: none;
 }
 
 .sort-select {
-  width: 170px;
+  width: 168px;
 }
 
 .chips {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
-  margin: 14px 0;
+  margin: 16px 0 4px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
 }
 
 .chip {
-  padding: 6px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 7px 16px;
   margin: 0;
   border-radius: 999px;
   border: 1px solid var(--border);
@@ -224,12 +248,59 @@ export default {
   color: var(--text);
   font-size: 13px;
   cursor: pointer;
+  transition: color 0.18s, border-color 0.18s, background 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+
+.chip:hover {
+  color: var(--primary-dark);
+  border-color: #bfe8d4;
+  background: #f4fbf8;
+  transform: translateY(-1px);
+}
+
+.chip-ico {
+  font-size: 14px;
+  line-height: 1;
 }
 
 .chip.active {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: linear-gradient(135deg, #00c185, #009260);
+  border-color: transparent;
   color: #fff;
+  box-shadow: 0 6px 14px rgba(0, 181, 120, 0.24);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 16px 0 8px;
+}
+
+.result-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 18px 0 10px;
+  padding-left: 12px;
+  border-left: 3px solid var(--primary);
+}
+
+.result-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.result-count {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.result-count b {
+  color: var(--primary-dark);
+  font-size: 15px;
 }
 
 .goods-area {
@@ -238,9 +309,14 @@ export default {
 
 .goods-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 14px;
-  margin-top: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .stat-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
@@ -251,6 +327,10 @@ export default {
 
   .sort-select {
     width: 100%;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

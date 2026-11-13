@@ -72,31 +72,49 @@ export default {
 
 .cover {
   position: relative;
-  height: 118px;
+  height: 148px;
   display: grid;
   place-items: center;
+  overflow: hidden;
+}
+
+.cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.35), transparent 62%);
+  pointer-events: none;
 }
 
 .emoji {
-  font-size: 46px;
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.18));
+  font-size: 54px;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.2));
+  transition: transform 0.25s ease;
+}
+
+.goods-card:hover .emoji {
+  transform: scale(1.09) rotate(-4deg);
 }
 
 .condition-tag {
   position: absolute;
   left: 10px;
   top: 10px;
-  padding: 1px 9px;
+  z-index: 1;
+  padding: 2px 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
   color: var(--primary-dark);
   font-size: 11px;
+  font-weight: 500;
 }
 
 .fav-btn {
   position: absolute;
   right: 8px;
   top: 8px;
+  z-index: 1;
   width: 30px;
   height: 30px;
   padding: 0;
@@ -106,8 +124,16 @@ export default {
   display: grid;
   place-items: center;
   background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(4px);
   color: var(--muted);
   cursor: pointer;
+  transition: transform 0.18s, background 0.18s, color 0.18s;
+}
+
+.fav-btn:hover {
+  transform: scale(1.08);
+  background: #fff;
+  color: #f59e0b;
 }
 
 .fav-btn.on {
@@ -161,9 +187,10 @@ export default {
 }
 
 .price {
-  font-size: 20px;
+  font-size: 21px;
   color: var(--accent);
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.3px;
 }
 
 .price small {
