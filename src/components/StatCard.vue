@@ -10,7 +10,7 @@
     </div>
     <div class="stat-body">
       <p class="stat-title">{{ title }}</p>
-      <p class="stat-value">
+      <p class="stat-value" :key="value">
         {{ value }}<small v-if="unit">{{ unit }}</small>
       </p>
       <p v-if="hint" class="stat-hint">{{ hint }}</p>
@@ -97,6 +97,18 @@ export default {
   line-height: 1.2;
   letter-spacing: 0.2px;
   color: var(--text);
+  animation: value-in 0.32s ease both;
+}
+
+@keyframes value-in {
+  from {
+    opacity: 0.45;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .stat-value small {

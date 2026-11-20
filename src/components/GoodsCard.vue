@@ -6,7 +6,7 @@
   ============================================================ -->
 <template>
   <div class="goods-card" @click="$emit('view', goods)">
-    <div class="cover" :style="{ background: goods.gradient }">
+    <div class="cover cover-art" :style="{ background: goods.gradient }">
       <span class="emoji">{{ goods.emoji }}</span>
       <span class="condition-tag">{{ goods.condition }}</span>
       <button class="fav-btn" :class="{ on: favorite }" type="button" @click.stop="$emit('fav', goods)">
@@ -138,6 +138,19 @@ export default {
 
 .fav-btn.on {
   color: #f59e0b;
+  animation: fav-pop 0.32s ease;
+}
+
+@keyframes fav-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .off-shelf {
@@ -191,6 +204,10 @@ export default {
   color: var(--accent);
   font-weight: 800;
   letter-spacing: -0.3px;
+  line-height: 1.3;
+  padding: 2px 9px;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #fff3ea, #fffaf6);
 }
 
 .price small {

@@ -23,7 +23,7 @@ export const useOrderStore = defineStore('order', {
     // 我卖出的订单（订单项里 sellerId 等于我）
     mySoldOrders: (state) => (sellerId) =>
       state.orders.filter((order) =>
-        order.items.some((item) => String(item.sellerId) === String(sellerId))
+        (order.items || []).some((item) => String(item.sellerId) === String(sellerId))
       ),
     // 待面交订单数（顶部角标）
     pendingCount: (state) => state.orders.filter((order) => order.status === '待面交').length

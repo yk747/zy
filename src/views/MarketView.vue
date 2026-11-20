@@ -59,21 +59,24 @@
       <span class="result-count">共 <b>{{ filtered.length }}</b> 件在售</span>
     </div>
 
-    <div v-loading="loading" class="goods-area" element-loading-text="正在集市里翻找…">
-      <div v-if="filtered.length" class="goods-grid">
+    <div class="goods-area">
+      <div v-if="loading" class="goods-grid">
+        <SkeletonCard v-for="n in 6" :key="n" />
+      </div>
+      <div v-else-if="filtered.length" class="goods-grid">
         <GoodsCard
           v-for="goods in filtered"
           :key="goods.id"
           :goods="goods"
           :keyword="keyword"
-          :favorite="favorite.has(goods.id)"
-          :in-cart="cart.has(goods.id)"
+          :favorite="favoriteIds.has(String(goods.id))"
+          :in-cart="cartIds.has(String(goods.id))"
           @view="goDetail"
           @add="addToCart"
           @fav="toggleFavorite"
         />
       </div>
-      <el-empty v-else-if="!loading" description="暂无相关宝贝，试试其他关键词或筛选条件">
+      <el-empty v-else description="暂无相关宝贝，试试其他关键词或筛选条件">
         <el-button type="primary" @click="resetFilter">清空筛选条件</el-button>
       </el-empty>
     </div>
@@ -86,6 +89,7 @@ import { ElMessage } from 'element-plus'
 import SearchBar from '../components/SearchBar.vue'
 import GoodsCard from '../components/GoodsCard.vue'
 import StatCard from '../components/StatCard.vue'
+import SkeletonCard from '../components/SkeletonCard.vue'
 import { fetchGoods, fetchUsers, serverState } from '../api/goods'
 import { useCartStore } from '../store/cart'
 import { useFavoriteStore } from '../store/favorite'
@@ -93,7 +97,7 @@ import { CATEGORIES } from '../../shared/goods.js'
 
 export default {
   name: 'MarketView',
-  components: { SearchBar, GoodsCard, StatCard },
+  components: { SearchBar, GoodsCard, StatCard, SkeletonCard },
   data() {
     return {
       serverState,
@@ -114,6 +118,13 @@ export default {
     favorite() {
       return useFavoriteStore()
     },
+    // 模板里批量判断卡片状态，用 Set 避免每张卡片都遍历一遍数组
+    cartIds() {
+      return this.cart.idSet
+    },
+    favoriteIds() {
+      return this.favorite.idSet
+    },
     categoryList() {
       return ['全部', ...CATEGORIES.map((item) => item.name)]
     },
@@ -128,12 +139,14 @@ export default {
     // 组合筛选：关键词 × 分类 × 排序，computed 自动跟随任一条件变化
     filtered() {
       const word = this.keyword.trim().toLowerCase()
+      // 字段缺失或为 null 时按空串处理，避免详情页因脏数据白屏
+      const text = (value) => String(value ?? '').toLowerCase()
       let list = this.goodsList.filter((goods) => {
         const hitWord =
           !word ||
-          goods.title.toLowerCase().includes(word) ||
-          goods.desc.toLowerCase().includes(word) ||
-          goods.category.toLowerCase().includes(word)
+          text(goods.title).includes(word) ||
+          text(goods.desc).includes(word) ||
+          text(goods.category).includes(word)
         const hitCategory = this.category === '全部' || goods.category === this.category
         return hitWord && hitCategory
       })

@@ -28,6 +28,35 @@ const ORDER_KEY = 'campus-market:orders'
 
 const DEFAULT_GRADIENT = 'linear-gradient(135deg, #6ee7b7, #059669)'
 
+// ---------- 请求缓存：页面来回切换时不必反复打接口 ----------
+// 缓存只存"接口请求成功"的结果；离线降级数据不写入，避免把旧数据固化。
+// 写操作（发布 / 编辑 / 删除 / 下单）后立即失效，保证数据一致。
+const CACHE_TTL = 45 * 1000
+const requestCache = new Map()
+
+function cloneData(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value))
+}
+
+function readCache(key) {
+  const hit = requestCache.get(key)
+  if (!hit) return null
+  if (Date.now() - hit.at > CACHE_TTL) {
+    requestCache.delete(key)
+    return null
+  }
+  return cloneData(hit.value)
+}
+
+function writeCache(key, value) {
+  requestCache.set(key, { value: cloneData(value), at: Date.now() })
+}
+
+function invalidateCache(key) {
+  if (key) requestCache.delete(key)
+  else requestCache.clear()
+}
+
 function readJSON(key, fallback) {
   try {
     const raw = localStorage.getItem(key)
@@ -107,9 +136,12 @@ export function normalizeGoods(payload) {
 
 // ---------- 用户接口（登录校验用） ----------
 export async function fetchUsers() {
+  const cached = readCache('users')
+  if (cached) return cached
   try {
     const res = await http.get('/users')
     markOnline()
+    writeCache('users', res.data)
     return res.data
   } catch {
     markOffline()
@@ -119,9 +151,12 @@ export async function fetchUsers() {
 
 // ---------- 闲置商品接口 ----------
 export async function fetchGoods() {
+  const cached = readCache('goods')
+  if (cached) return cached
   try {
     const res = await http.get('/goods')
     markOnline()
+    writeCache('goods', res.data)
     return res.data
   } catch {
     markOffline()
@@ -130,6 +165,9 @@ export async function fetchGoods() {
 }
 
 export async function fetchGoodsById(id) {
+  // 列表缓存命中时直接复用，详情页不必再发一次 /goods/:id
+  const cached = readCache('goods')
+  if (cached) return cached.find((item) => String(item.id) === String(id)) || null
   try {
     const res = await http.get(`/goods/${id}`)
     markOnline()
@@ -149,12 +187,14 @@ export async function createGoods(payload) {
   try {
     const res = await http.post('/goods', goods)
     markOnline()
+    invalidateCache('goods')
     return res.data
   } catch (err) {
     const error = businessError(err, '发布失败')
     if (error) throw error
     markOffline()
     writeLocalGoods([goods, ...readLocalGoods()])
+    invalidateCache('goods')
     return goods
   }
 }
@@ -163,6 +203,7 @@ export async function updateGoods(id, payload) {
   try {
     const res = await http.put(`/goods/${id}`, payload)
     markOnline()
+    invalidateCache('goods')
     return res.data
   } catch (err) {
     const error = businessError(err, '保存失败')
@@ -172,6 +213,7 @@ export async function updateGoods(id, payload) {
       String(item.id) === String(id) ? { ...item, ...payload, id: item.id } : item
     )
     writeLocalGoods(list)
+    invalidateCache('goods')
     return list.find((item) => String(item.id) === String(id))
   }
 }
@@ -180,21 +222,26 @@ export async function removeGoods(id) {
   try {
     await http.delete(`/goods/${id}`)
     markOnline()
+    invalidateCache('goods')
     return true
   } catch (err) {
     const error = businessError(err, '删除失败')
     if (error) throw error
     markOffline()
     writeLocalGoods(readLocalGoods().filter((item) => String(item.id) !== String(id)))
+    invalidateCache('goods')
     return true
   }
 }
 
 // ---------- 订单接口 ----------
 export async function fetchOrders() {
+  const cached = readCache('orders')
+  if (cached) return cached
   try {
     const res = await http.get('/orders')
     markOnline()
+    writeCache('orders', res.data)
     return res.data
   } catch {
     markOffline()
@@ -218,12 +265,15 @@ export async function createOrder(payload) {
   try {
     const res = await http.post('/orders', payload)
     markOnline()
+    invalidateCache('orders')
     return res.data
   } catch (err) {
     const error = businessError(err, '下单失败')
     if (error) throw error
     markOffline()
-    return createLocalOrder(payload)
+    const order = createLocalOrder(payload)
+    invalidateCache('orders')
+    return order
   }
 }
 
@@ -231,6 +281,7 @@ export async function updateOrder(id, payload) {
   try {
     const res = await http.put(`/orders/${id}`, payload)
     markOnline()
+    invalidateCache('orders')
     return res.data
   } catch (err) {
     const error = businessError(err, '更新订单失败')
@@ -240,6 +291,7 @@ export async function updateOrder(id, payload) {
       String(order.id) === String(id) ? { ...order, ...payload, id: order.id } : order
     )
     writeLocalOrders(list)
+    invalidateCache('orders')
     return list.find((order) => String(order.id) === String(id))
   }
 }

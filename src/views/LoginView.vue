@@ -214,7 +214,7 @@ export default {
       if (hour < 14) return '午安，同学'
       if (hour < 18) return '下午好，同学'
       return '晚上好，同学'
-    },
+    }
   },
   watch: {
     // 勾选状态变化立即保存，下次进入登录页自动恢复

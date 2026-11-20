@@ -16,7 +16,9 @@ export const useCartStore = defineStore('cart', {
     totalCount: (state) => state.items.length,
     totalPrice: (state) =>
       Number(state.items.reduce((sum, item) => sum + Number(item.price || 0), 0).toFixed(2)),
-    isEmpty: (state) => state.items.length === 0
+    isEmpty: (state) => state.items.length === 0,
+    // 列表页每张卡片都要判断"是否已加购"，用 Set 把逐条 some 降到 O(1)
+    idSet: (state) => new Set(state.items.map((item) => String(item.id)))
   },
   actions: {
     // 加购：已加过（孤品）返回 false，让页面提示"已经在购物车里了"
@@ -34,7 +36,7 @@ export const useCartStore = defineStore('cart', {
       return true
     },
     has(id) {
-      return this.items.some((item) => String(item.id) === String(id))
+      return this.idSet.has(String(id))
     },
     remove(id) {
       this.items = this.items.filter((item) => String(item.id) !== String(id))

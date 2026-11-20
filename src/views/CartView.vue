@@ -45,8 +45,8 @@
           </div>
 
           <div v-for="item in items" :key="item.id" class="cart-item">
-            <div class="item-cover" :style="{ background: item.gradient }" @click="goDetail(item.id)">
-              {{ item.emoji }}
+            <div class="item-cover cover-art" :style="{ background: item.gradient }" @click="goDetail(item.id)">
+              <span>{{ item.emoji }}</span>
             </div>
 
             <div class="item-main">
@@ -76,7 +76,7 @@
     </template>
 
     <!-- 面交信息弹窗：表单校验 -->
-    <el-dialog v-model="checkoutVisible" title="确认订单信息" width="540px" :close-on-click-modal="false">
+    <el-dialog v-model="checkoutVisible" title="确认订单信息" width="min(540px, 92vw)" :close-on-click-modal="false">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="88px">
         <el-form-item label="联系电话" prop="contact">
           <el-input v-focus v-model.trim="form.contact" maxlength="11" placeholder="请输入手机号，便于卖家与您联系" clearable />
@@ -350,6 +350,39 @@ export default {
 
   .summary {
     position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  /* 窄屏把价格移到标题下方，移除按钮提到右侧，避免四列挤成一条 */
+  .cart-item {
+    grid-template-columns: 56px 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 6px 10px;
+  }
+
+  .item-cover {
+    grid-row: 1 / span 2;
+    width: 56px;
+    height: 56px;
+    font-size: 26px;
+  }
+
+  .item-main {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .subtotal {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: left;
+  }
+
+  .cart-item > .el-button {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    margin: 0;
   }
 }
 </style>

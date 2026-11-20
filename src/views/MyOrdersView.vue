@@ -22,7 +22,9 @@
           </div>
 
           <div v-for="item in order.items" :key="item.goodsId" class="order-goods" @click="goDetail(item.goodsId)">
-            <div class="cover" :style="{ background: item.gradient }">{{ item.emoji }}</div>
+            <div class="cover cover-art" :style="{ background: item.gradient }">
+              <span>{{ item.emoji }}</span>
+            </div>
             <div class="goods-main">
               <b>{{ item.title }}</b>
               <span class="small muted">
@@ -219,9 +221,34 @@ export default {
 }
 
 @media (max-width: 720px) {
+  .head {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+
+  .order-no,
+  .head .small {
+    margin-right: 0;
+  }
+
+  .order-no {
+    flex: 1;
+  }
+
+  /* 时间单独一行，避免订单号 / 时间 / 状态标签三者挤在一行溢出 */
+  .head .small {
+    order: 3;
+    flex-basis: 100%;
+  }
+
   .foot {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .total {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 </style>

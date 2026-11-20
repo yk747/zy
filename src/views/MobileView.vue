@@ -52,7 +52,9 @@
                 @click="openDetail(goods)"
               >
                 <template #thumb>
-                  <div class="m-cover" :style="{ background: goods.gradient }">{{ goods.emoji }}</div>
+                  <div class="m-cover cover-art" :style="{ background: goods.gradient }">
+                    <span>{{ goods.emoji }}</span>
+                  </div>
                 </template>
                 <template #tags>
                   <van-tag plain type="primary" class="m-tag">{{ goods.category }}</van-tag>
@@ -76,7 +78,7 @@
           <template v-else>
             <van-nav-bar :title="current.category" left-text="返回" left-arrow @click-left="current = null" />
 
-            <div class="detail-cover" :style="{ background: current.gradient }">
+            <div class="detail-cover cover-art" :style="{ background: current.gradient }">
               <span class="detail-emoji">{{ current.emoji }}</span>
               <van-tag round type="primary" class="detail-condition">{{ current.condition }}</van-tag>
             </div>
@@ -186,13 +188,14 @@ export default {
     // computed 组合筛选：关键词 × 分类
     filtered() {
       const word = this.keyword.trim().toLowerCase()
+      const text = (value) => String(value ?? '').toLowerCase()
       return this.goodsList
         .filter((goods) => goods.status === '在售')
         .filter((goods) => {
           const hitWord =
             !word ||
-            goods.title.toLowerCase().includes(word) ||
-            goods.desc.toLowerCase().includes(word)
+            text(goods.title).includes(word) ||
+            text(goods.desc).includes(word)
           const hitCategory = this.category === '全部' || goods.category === this.category
           return hitWord && hitCategory
         })

@@ -1,23 +1,24 @@
 // ============================================================
 // vite.config.js —— 构建配置
 // ① @vitejs/plugin-vue：让 .vue 单文件组件能被编译
-// ② unplugin-vue-components + VantResolver：Vant 组件按需引入
-//    （模板里写 <van-button>，编译时自动补 import 与样式，不打包整个 Vant）
+// ② unplugin-vue-components + ElementPlusResolver / VantResolver：
+//    Element Plus 与 Vant 都按需引入（模板写标签，编译时自动补 import 与样式）
 // ⚠️ 改完本文件要重启 dev 服务器
 // ============================================================
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
-import { VantResolver } from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver, VantResolver } from 'unplugin-vue-components/resolvers'
 import { defineConfig } from 'vite'
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command, isPreview }) => ({
   // GitHub Pages 项目站点在 /zy/ 子路径下，构建时必须带 base，否则资源 404；
-  // 本地 dev 仍用根路径，避免开发时访问要带 /zy/ 前缀
-  base: command === 'build' ? '/zy/' : '/',
+  // 本地 dev 仍用根路径，避免开发时访问要带 /zy/ 前缀；
+  // preview 读的是 dist（路径已带 /zy/），base 必须同步，否则 JS 会被当 HTML 返回导致白屏。
+  base: command === 'build' || isPreview ? '/zy/' : '/',
   plugins: [
     vue(),
     Components({
-      resolvers: [VantResolver()]
+      resolvers: [VantResolver(), ElementPlusResolver({ importStyle: 'css' })]
     })
   ],
   server: {

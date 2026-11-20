@@ -423,6 +423,49 @@ input:not(.el-input__inner):not(.van-field__control):focus {
   border-radius: 12px;
 }
 
+/* ---------- 骨架屏：加载时先占位，避免布局跳动 ---------- */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(100deg, #eef3f0 20%, #f8fbf9 50%, #eef3f0 80%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+/* ---------- 商品占位图：统一网点纹理，让 emoji 主图更有设计感 ---------- */
+.cover-art {
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 1.3px, transparent 1.5px);
+  background-size: 15px 15px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.cover-art > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 键盘导航时给可见焦点，鼠标点击不显示 */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 720px) {
   .page {
@@ -431,5 +474,17 @@ input:not(.el-input__inner):not(.van-field__control):focus {
 
   .card {
     padding: 14px;
+  }
+}
+
+/* 尊重系统"减少动态效果"偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

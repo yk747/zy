@@ -16,15 +16,24 @@
     <template v-else-if="goods">
       <div class="detail-grid">
         <div class="gallery">
-          <div class="main-cover" :style="{ background: goods.gradient }">
-            <span class="big-emoji">{{ goods.emoji }}</span>
-            <span class="cover-badge">{{ goods.category }}</span>
+          <div class="main-cover cover-art" :style="{ background: goods.gradient }">
+            <span class="big-emoji" :style="{ transform: currentView.transform }">{{ goods.emoji }}</span>
+            <span class="cover-badge">{{ goods.category }} · {{ currentView.label }}</span>
             <span v-if="goods.status === '下架'" class="off-shelf">已下架</span>
           </div>
           <div class="thumbs">
-            <div v-for="n in 3" :key="n" class="thumb" :style="{ background: goods.gradient }">
-              {{ goods.emoji }}
-            </div>
+            <button
+              v-for="(view, index) in views"
+              :key="index"
+              type="button"
+              class="thumb"
+              :class="{ active: activeThumb === index }"
+              :style="{ background: goods.gradient }"
+              :aria-label="`查看${view.label}`"
+              @click="activeThumb = index"
+            >
+              <span :style="{ transform: view.thumbTransform }">{{ goods.emoji }}</span>
+            </button>
             <div class="thumb thumb--more">多角度实拍</div>
           </div>
         </div>
@@ -116,6 +125,14 @@ export default {
       related: [],
       seller: {},
       users: [],
+      sellerGoodsCount: 0,
+      activeThumb: 0,
+      // 占位图没有真实多图，用三种"拍摄角度"模拟图库切换
+      views: [
+        { label: '正面实拍', transform: 'scale(1) rotate(0deg)', thumbTransform: 'scale(1)' },
+        { label: '侧面展示', transform: 'scale(0.86) rotate(-14deg)', thumbTransform: 'scale(0.86) rotate(-14deg)' },
+        { label: '细节特写', transform: 'scale(1.18) rotate(9deg)', thumbTransform: 'scale(1.18) rotate(9deg)' }
+      ],
       loading: true
     }
   },
@@ -126,8 +143,8 @@ export default {
     favorite() {
       return useFavoriteStore()
     },
-    sellerGoodsCount() {
-      return this.related.length + 1
+    currentView() {
+      return this.views[this.activeThumb] || this.views[0]
     }
   },
   watch: {
@@ -143,19 +160,33 @@ export default {
     async load() {
       this.loading = true
       const id = this.$route.params.id
-      this.goods = await fetchGoodsById(id)
-      if (this.goods) {
-        const [all, users] = await Promise.all([fetchGoods(), fetchUsers()])
+      // 三个请求互不依赖：并行发出，接口未启动时等待时间从两次超时压到一次
+      const [goods, all, users] = await Promise.all([
+        fetchGoodsById(id),
+        fetchGoods(),
+        fetchUsers()
+      ])
+      this.goods = goods
+      this.activeThumb = 0
+      if (goods) {
         this.users = users
-        this.seller = users.find((user) => String(user.id) === String(this.goods.sellerId)) || {}
+        this.seller = users.find((user) => String(user.id) === String(goods.sellerId)) || {}
+        const sellerId = String(goods.sellerId)
+        this.sellerGoodsCount = all.filter(
+          (item) => String(item.sellerId) === sellerId && item.status === '在售'
+        ).length
         this.related = all
           .filter(
             (item) =>
-              item.category === this.goods.category &&
+              item.category === goods.category &&
               String(item.id) !== String(id) &&
               item.status === '在售'
           )
           .slice(0, 3)
+      } else {
+        this.seller = {}
+        this.related = []
+        this.sellerGoodsCount = 0
       }
       this.loading = false
     },
@@ -229,7 +260,9 @@ export default {
 
 .big-emoji {
   font-size: 140px;
+  display: inline-block;
   filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.22));
+  transition: transform 0.28s ease;
 }
 
 .cover-badge {
@@ -268,12 +301,41 @@ export default {
   font-size: 22px;
 }
 
-.thumb--more {
+/* 缩略图可点选切换主图视角；用 .thumbs .thumb 提高权重以覆盖全局 button 样式 */
+.thumbs .thumb {
+  padding: 0;
+  margin: 0;
+  border: 2px solid transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+}
+
+.thumbs .thumb span {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.thumbs .thumb:hover {
+  transform: translateY(-2px);
+}
+
+.thumbs .thumb.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(0, 181, 120, 0.18);
+}
+
+.thumbs .thumb--more {
   background: #f7faf8 !important;
   color: var(--muted);
   font-size: 11px;
-  border: 1px dashed var(--border);
+  border: 1px dashed var(--border) !important;
   text-align: center;
+  cursor: default;
+}
+
+.thumbs .thumb--more:hover {
+  transform: none;
 }
 
 .info {

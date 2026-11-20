@@ -64,7 +64,7 @@
 
 <script>
 import { mapState } from 'pinia'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { useCartStore } from '../store/cart'
 import { useUserStore } from '../store/user'
 
@@ -96,10 +96,20 @@ export default {
         return
       }
       if (command === 'logout') {
-        const user = useUserStore()
-        user.logout()
-        ElMessage.success('已退出登录')
-        this.$router.push({ name: 'login' })
+        ElMessageBox.confirm('确定退出登录吗？未同步的离线数据仍会保留在本机。', '退出确认', {
+          type: 'warning',
+          confirmButtonText: '退出登录',
+          cancelButtonText: '再逛逛'
+        })
+          .then(() => {
+            const user = useUserStore()
+            user.logout()
+            ElMessage.success('已退出登录')
+            this.$router.push({ name: 'login' })
+          })
+          .catch(() => {
+            /* 取消退出：留在当前页面 */
+          })
       }
     }
   }
@@ -289,13 +299,34 @@ export default {
 }
 
 @media (max-width: 720px) {
+  .header-inner {
+    padding: 0 8px;
+    gap: 4px;
+  }
+
+  /* 窄屏菜单可横向滑动，5 个入口一个都不丢 */
+  .nav {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
   .nav :deep(.el-menu-item) {
-    padding: 0 6px;
-    font-size: 12px;
+    padding: 0 5px;
+    margin: 0 1px;
+    font-size: 11px;
+    white-space: nowrap;
   }
 
   .nav :deep(.el-menu-item .el-icon) {
     display: none;
+  }
+
+  .user-trigger {
+    padding: 3px;
   }
 }
 </style>

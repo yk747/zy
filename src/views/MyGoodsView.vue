@@ -10,7 +10,9 @@
     <div v-loading="loading" class="goods-area" element-loading-text="正在加载我发布的宝贝…">
       <template v-if="myGoods.length">
         <div v-for="goods in myGoods" :key="goods.id" class="publish-item">
-          <div class="cover" :style="{ background: goods.gradient }">{{ goods.emoji }}</div>
+          <div class="cover cover-art" :style="{ background: goods.gradient }">
+            <span>{{ goods.emoji }}</span>
+          </div>
 
           <div class="main">
             <b class="title" @click="goDetail(goods.id)">{{ goods.title }}</b>

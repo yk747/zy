@@ -9,11 +9,13 @@ export const useFavoriteStore = defineStore('favorite', {
     ids: []
   }),
   getters: {
-    count: (state) => state.ids.length
+    count: (state) => state.ids.length,
+    // 与 cart.idSet 同理：广场卡片批量判断收藏状态时避免逐条遍历
+    idSet: (state) => new Set(state.ids.map((id) => String(id)))
   },
   actions: {
     has(id) {
-      return this.ids.some((item) => String(item) === String(id))
+      return this.idSet.has(String(id))
     },
     // 切换收藏：返回 true 表示已收藏，false 表示已取消
     toggle(id) {

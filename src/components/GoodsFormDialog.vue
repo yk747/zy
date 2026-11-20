@@ -10,7 +10,7 @@
   <el-dialog
     :model-value="modelValue"
     :title="isEdit ? '编辑宝贝信息' : '发布宝贝'"
-    width="560px"
+    width="min(560px, 92vw)"
     :close-on-click-modal="false"
     @update:model-value="$emit('update:modelValue', $event)"
     @open="initForm"
@@ -253,5 +253,17 @@ export default {
   border: none;
   border-radius: 50%;
   cursor: pointer;
+}
+
+@media (max-width: 560px) {
+  .pick-emoji {
+    margin: 0 4px 4px 0;
+  }
+
+  /* 窄屏成色选项换行，避免撑破弹窗 */
+  :deep(.el-radio-group) {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
 }
 </style>
