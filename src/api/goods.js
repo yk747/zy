@@ -4,7 +4,7 @@
 // axios 覆盖 get / post / put / delete 四种请求，每处带 catch 兜底。
 // 设计要点：
 //   ① 统一 axios 实例：baseURL / timeout 只配一次
-//   ② 后端没启动也不白屏：自动降级到 localStorage 演示数据
+//   ② 后端没启动也不白屏：自动降级到 localStorage 本地数据
 //   ③ 后端"有响应但报错"（如商品不存在）要抛给页面，不能悄悄降级
 // 启动后端：npm run server（json-server --watch server/db.json --port 3001）
 // ============================================================
@@ -14,7 +14,7 @@ import { GOODS_SEED, USER_SEED, ORDER_SEED } from '../../shared/goods.js'
 
 // 页面顶部"在线 / 离线"提示条读取这里
 export const serverState = reactive({
-  online: null, // null = 还没请求过，true = 接口正常，false = 已降级本地演示
+  online: null, // null = 还没请求过，true = 接口正常，false = 已降级到本地数据
   message: ''
 })
 
@@ -25,6 +25,10 @@ const http = axios.create({
 
 const GOODS_KEY = 'campus-market:goods'
 const ORDER_KEY = 'campus-market:orders'
+const USER_KEY = 'campus-market:users'
+
+// 项目未接入短信网关：登录验证码使用固定值 + 页面提示
+export const VERIFY_CODE = '123456'
 
 const DEFAULT_GRADIENT = 'linear-gradient(135deg, #6ee7b7, #059669)'
 
@@ -99,10 +103,22 @@ function writeLocalOrders(list) {
   writeJSON(ORDER_KEY, list)
 }
 
+function readLocalUsers() {
+  const list = readJSON(USER_KEY, null)
+  if (Array.isArray(list)) return list
+  const seed = USER_SEED.map((item) => ({ ...item }))
+  writeJSON(USER_KEY, seed)
+  return seed
+}
+
+function writeLocalUsers(list) {
+  writeJSON(USER_KEY, list)
+}
+
 function markOffline() {
   serverState.online = false
   serverState.message =
-    '网络服务暂时不可用，已进入离线浏览模式：发布、收藏与下单仍可体验，服务恢复后刷新页面即可同步。'
+    '网络服务暂时不可用，已进入离线浏览模式：发布、收藏与下单仍可使用，服务恢复后刷新页面即可同步。'
 }
 
 function markOnline() {
@@ -134,7 +150,7 @@ export function normalizeGoods(payload) {
   }
 }
 
-// ---------- 用户接口（登录校验用） ----------
+// ---------- 用户接口（登录 / 注册 / 找回密码） ----------
 export async function fetchUsers() {
   const cached = readCache('users')
   if (cached) return cached
@@ -142,10 +158,86 @@ export async function fetchUsers() {
     const res = await http.get('/users')
     markOnline()
     writeCache('users', res.data)
+    // 同步一份到本地：注册用户离线后仍能登录
+    writeLocalUsers(res.data)
     return res.data
   } catch {
     markOffline()
-    return USER_SEED.map((item) => ({ ...item }))
+    return readLocalUsers()
+  }
+}
+
+// 手机号查找（验证码登录 / 找回密码共用）
+export async function findUserByPhone(phone) {
+  const users = await fetchUsers()
+  const target = String(phone || '').trim()
+  return users.find((user) => String(user.phone) === target) || null
+}
+
+// 短信验证码：真实项目应由服务端下发，这里直接返回固定验证码
+export function sendVerifyCode(phone) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve({ ok: true, code: VERIFY_CODE, phone }), 500)
+  })
+}
+
+// 注册：昵称 / 手机号唯一，写库并持久化；业务校验失败抛错，不降级
+export async function registerUser({ name, phone, password, dorm }) {
+  const users = await fetchUsers()
+  const cleanName = String(name || '').trim()
+  const cleanPhone = String(phone || '').trim()
+
+  if (users.some((user) => user.name === cleanName)) {
+    throw new Error('这个昵称已被占用，换一个试试')
+  }
+  if (users.some((user) => String(user.phone) === cleanPhone)) {
+    throw new Error('该手机号已注册，请直接登录')
+  }
+
+  const user = {
+    id: 'u' + Date.now(),
+    name: cleanName,
+    password: String(password || ''),
+    dorm: String(dorm || '').trim() || '未填写宿舍',
+    phone: cleanPhone
+  }
+
+  try {
+    const res = await http.post('/users', user)
+    markOnline()
+    invalidateCache('users')
+    return res.data
+  } catch (err) {
+    const error = businessError(err, '注册失败')
+    if (error) throw error
+    markOffline()
+    writeLocalUsers([...readLocalUsers(), user])
+    invalidateCache('users')
+    return user
+  }
+}
+
+// 找回密码：按手机号定位用户后更新密码（未接入短信验证，按手机号重置）
+export async function resetPassword(phone, password) {
+  const user = await findUserByPhone(phone)
+  if (!user) throw new Error('该手机号未注册，请先创建账号')
+
+  try {
+    await http.put(`/users/${user.id}`, { password: String(password || '') })
+    markOnline()
+    invalidateCache('users')
+    return true
+  } catch (err) {
+    const error = businessError(err, '重置失败')
+    if (error) throw error
+    markOffline()
+    writeLocalUsers(
+      readLocalUsers().map((item) =>
+        String(item.id) === String(user.id) ? { ...item, password: String(password || '') } : item
+      )
+    )
+    invalidateCache('users')
+    return true
   }
 }
 
@@ -293,5 +385,22 @@ export async function updateOrder(id, payload) {
     writeLocalOrders(list)
     invalidateCache('orders')
     return list.find((order) => String(order.id) === String(id))
+  }
+}
+
+// 删除订单（已完成）：在线删库，离线删本地缓存，两边都失效 orders 缓存
+export async function deleteOrder(id) {
+  try {
+    await http.delete(`/orders/${id}`)
+    markOnline()
+    invalidateCache('orders')
+    return true
+  } catch (err) {
+    const error = businessError(err, '删除订单失败')
+    if (error) throw error
+    markOffline()
+    writeLocalOrders(readLocalOrders().filter((order) => String(order.id) !== String(id)))
+    invalidateCache('orders')
+    return true
   }
 }

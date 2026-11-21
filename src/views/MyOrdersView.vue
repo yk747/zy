@@ -51,6 +51,16 @@
               >
                 确认收货
               </el-button>
+              <el-button
+                v-if="order.status === '已完成'"
+                type="danger"
+                plain
+                size="small"
+                :loading="deletingId === order.id"
+                @click="deleteOrder(order)"
+              >
+                删除订单
+              </el-button>
             </span>
           </div>
         </div>
@@ -66,7 +76,7 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { useOrderStore } from '../store/order'
 import { useUserStore } from '../store/user'
 
@@ -76,7 +86,8 @@ export default {
     return {
       tab: 'bought',
       loading: false,
-      confirmingId: ''
+      confirmingId: '',
+      deletingId: ''
     }
   },
   computed: {
@@ -122,6 +133,27 @@ export default {
         ElMessage.error(err.message || '操作失败，请稍后再试')
       } finally {
         this.confirmingId = ''
+      }
+    },
+    // 已成交订单：二次确认后删除，记录从列表中移除
+    async deleteOrder(order) {
+      try {
+        await ElMessageBox.confirm(
+          `确定删除订单 ${order.orderNo} 吗？该订单的成交记录将被移除且无法恢复。`,
+          '删除订单',
+          { type: 'warning', confirmButtonText: '确认删除', cancelButtonText: '取消' }
+        )
+      } catch {
+        return
+      }
+      this.deletingId = order.id
+      try {
+        await useOrderStore().removeOrder(order.id)
+        ElMessage.success('订单已删除')
+      } catch (err) {
+        ElMessage.error(err.message || '删除失败，请稍后再试')
+      } finally {
+        this.deletingId = ''
       }
     }
   }

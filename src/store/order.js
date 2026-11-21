@@ -7,7 +7,8 @@ import { defineStore } from 'pinia'
 import {
   fetchOrders as fetchOrdersApi,
   createOrder as createOrderApi,
-  updateOrder as updateOrderApi
+  updateOrder as updateOrderApi,
+  deleteOrder as deleteOrderApi
 } from '../api/goods'
 
 export const useOrderStore = defineStore('order', {
@@ -53,6 +54,12 @@ export const useOrderStore = defineStore('order', {
       const index = this.orders.findIndex((order) => String(order.id) === String(id))
       if (index !== -1) this.orders.splice(index, 1, updated)
       return updated
+    },
+    // 删除已完成订单：DELETE 后同步移除本地 state
+    async removeOrder(id) {
+      await deleteOrderApi(id)
+      this.orders = this.orders.filter((order) => String(order.id) !== String(id))
+      return true
     }
   }
 })

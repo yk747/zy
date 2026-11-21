@@ -38,11 +38,11 @@ npm run server   # json-server
 npm run dev      # 前端
 ```
 
-体验账号（点击登录页「免费体验」自动进入，也可手动输入，密码统一 `123456`）：
+快捷账号（点击登录页「一键登录」自动进入，也可手动输入，密码统一 `123456`）：
 
 | 昵称 | 宿舍 |
 | --- | --- |
-| 校园体验官 | 东区 1 号楼 101 |
+| 林小满 | 东区 1 号楼 101 |
 | 小杨 | 东区 8 号楼 502 |
 | 小刘 | 东区 6 号楼 301 |
 | 小郭 | 西区 3 号楼 415 |
@@ -52,7 +52,7 @@ npm run dev      # 前端
 
 ### 接口没启动也能用
 
-前端请求失败后会自动降级到浏览器 `localStorage` 演示数据，页面顶部提示「本地演示模式」。
+前端请求失败后会自动降级到浏览器 `localStorage` 本地数据，页面顶部提示「离线浏览模式」。
 发布、收藏、下单照常执行；启动 json-server 后刷新即可切换为真实接口。
 
 `server/db.json` 为接口数据文件，删除后重启会恢复种子数据。
@@ -67,7 +67,7 @@ npm run dev      # 前端
 | F4 | 商品详情（动态路由 `:id`）+ 卖家信息 | `GoodsDetailView.vue` |
 | F5 | 购物车 / 收藏（Pinia 业务仓库，persist 持久化） | `store/cart.js` + `store/favorite.js` |
 | E6 | 我的发布（上下架 put、编辑、删除） | `CenterView.vue` + `MyGoodsView.vue` |
-| E7 | 订单模拟（确认购买生成记录，待面交 → 已完成） | `CartView.vue` + `MyOrdersView.vue` + `store/order.js` |
+| E7 | 订单管理（确认购买生成记录，待面交 → 已完成） | `CartView.vue` + `MyOrdersView.vue` + `store/order.js` |
 | O8 | 占位 emoji 图 | `GoodsCard.vue` / 发布表单 |
 
 ## 后端接口（json-server，3001 端口）

@@ -12,8 +12,11 @@
 // ============================================================
 import { createApp } from 'vue'
 
-import { ElLoading } from 'element-plus'
+import { ElLoading, messageDefaults } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
+
+// 全局消息提示停留时长：默认 3000ms 偏长，加购 / 移除等操作提示一闪而过更清爽
+messageDefaults.duration = 1600
 import 'element-plus/es/components/message-box/style/css'
 import 'element-plus/es/components/loading/style/css'
 // 只引入项目实际用到的图标（StatCard 的动态 :is 也按这些名字渲染）

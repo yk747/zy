@@ -1,7 +1,7 @@
 // ============================================================
 // shared/goods.js —— 校园二手集市 · 前后端共享的种子数据
 // json-server 首次建库（server/db.json）与前端"后端未启动"时的
-// 本地演示数据（src/api/goods.js）都用这一份，字段保持一致。
+// 本地兜底数据（src/api/goods.js）都用这一份，字段保持一致。
 // 数据模型（题目 G3）：goods / users / orders
 // ============================================================
 
@@ -23,7 +23,7 @@ export const USER_SEED = [
   { id: 'u4', name: '陈知远', password: '123456', dorm: '西区 5 号楼 208', phone: '13800001004' },
   { id: 'u5', name: '周予安', password: '123456', dorm: '东区 9 号楼 606', phone: '13800001005' },
   { id: 'u6', name: '林一诺', password: '123456', dorm: '西区 2 号楼 509', phone: '13800001006' },
-  { id: 'u7', name: '校园体验官', password: '123456', dorm: '东区 1 号楼 101', phone: '13800001007' }
+  { id: 'u7', name: '林小满', password: '123456', dorm: '东区 1 号楼 101', phone: '13800001007' }
 ]
 
 export const GOODS_SEED = [
@@ -236,4 +236,4 @@ export const ORDER_SEED = [
   }
 ]
 
-export const DEMO_ACCOUNT = { username: '校园体验官', password: '123456' }
+export const QUICK_ACCOUNT = { id: 'u7', phone: '13800001007', username: '林小满', password: '123456' }
