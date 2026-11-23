@@ -64,6 +64,12 @@ const router = createRouter({
           name: 'my-orders',
           component: () => import('../views/MyOrdersView.vue'),
           meta: { title: '我的订单', requiresAuth: true }
+        },
+        {
+          path: 'my-favorites',
+          name: 'my-favorites',
+          component: () => import('../views/MyFavoritesView.vue'),
+          meta: { title: '我的收藏', requiresAuth: true }
         }
       ]
     },

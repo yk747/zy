@@ -26,8 +26,12 @@
       class="offline-alert"
     />
 
+    <div class="stat-grid">
+      <StatCard v-for="item in statCards" :key="item.title" v-bind="item" />
+    </div>
+
     <div class="hero card">
-      <SearchBar v-model="keyword" @search="onSearch" />
+      <SearchBar v-model="keyword" />
       <el-select v-model="sort" class="sort-select" size="large">
         <el-option label="综合排序" value="default" />
         <el-option label="最新上架" value="new" />
@@ -48,10 +52,6 @@
         <span class="chip-ico">{{ categoryIcon(item) }}</span>
         <span>{{ item }}</span>
       </button>
-    </div>
-
-    <div class="stat-grid">
-      <StatCard v-for="item in statCards" :key="item.title" v-bind="item" />
     </div>
 
     <div class="result-bar">
@@ -136,12 +136,14 @@ export default {
         { title: '购物车', value: this.cartCount, unit: '件', icon: 'ShoppingCart', tone: 'orange' }
       ]
     },
-    // 组合筛选：关键词 × 分类 × 排序，computed 自动跟随任一条件变化
+    // 组合筛选：在售 × 关键词 × 分类 × 排序，computed 自动跟随任一条件变化
+    // 已成交（已售）与手动下架的宝贝不再出现在集市列表
     filtered() {
       const word = this.keyword.trim().toLowerCase()
       // 字段缺失或为 null 时按空串处理，避免详情页因脏数据白屏
       const text = (value) => String(value ?? '').toLowerCase()
       let list = this.goodsList.filter((goods) => {
+        if (goods.status !== '在售') return false
         const hitWord =
           !word ||
           text(goods.title).includes(word) ||
@@ -182,10 +184,6 @@ export default {
       const hit = this.users.find((user) => String(user.id) === String(id))
       return hit ? hit.name : '同学'
     },
-    onSearch() {
-      // 回车/点击搜索时给个轻反馈，实际过滤由 computed 自动完成
-      if (this.keyword.trim()) ElMessage.info(`正在搜索「${this.keyword.trim()}」`)
-    },
     resetFilter() {
       this.keyword = ''
       this.category = '全部'
@@ -195,6 +193,10 @@ export default {
       this.$router.push({ name: 'goods-detail', params: { id: goods.id } })
     },
     addToCart(goods) {
+      if (goods.status !== '在售') {
+        ElMessage.warning('该宝贝已成交或下架，看看其他好物吧')
+        return
+      }
       const ok = this.cart.add(goods, this.sellerName(goods.sellerId))
       ElMessage[ok ? 'success' : 'warning'](
         ok ? `「${goods.title.slice(0, 12)}…」已加入购物车` : '该宝贝已在购物车中'
@@ -219,7 +221,7 @@ export default {
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
-  margin-top: 16px;
+  margin-top: 0;
   padding: 14px;
   border-radius: 16px;
   background: linear-gradient(135deg, #ffffff 0%, #f3fbf7 100%);
@@ -238,7 +240,7 @@ export default {
 .chips {
   display: flex;
   gap: 8px;
-  margin: 16px 0 4px;
+  margin: 14px 0 0;
   padding-bottom: 4px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -287,7 +289,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
-  margin: 16px 0 8px;
+  margin: 4px 0 4px;
 }
 
 .result-bar {

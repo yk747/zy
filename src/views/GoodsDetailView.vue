@@ -19,7 +19,9 @@
           <div class="main-cover cover-art" :style="{ background: goods.gradient }">
             <span class="big-emoji" :style="{ transform: currentView.transform }">{{ goods.emoji }}</span>
             <span class="cover-badge">{{ goods.category }} · {{ currentView.label }}</span>
-            <span v-if="goods.status === '下架'" class="off-shelf">已下架</span>
+            <span v-if="goods.status && goods.status !== '在售'" class="off-shelf">
+              {{ goods.status === '已售' ? '已 成 交' : '已 下 架' }}
+            </span>
           </div>
           <div class="thumbs">
             <button
@@ -75,12 +77,14 @@
             <el-button
               type="primary"
               size="large"
-              :disabled="goods.status === '下架' || cart.has(goods.id)"
+              :disabled="goods.status !== '在售' || cart.has(goods.id)"
               @click="addToCart"
             >
-              <el-icon><ShoppingCart /></el-icon>{{ cart.has(goods.id) ? '已在购物车' : '加入购物车' }}
+              <el-icon><ShoppingCart /></el-icon>{{
+                goods.status === '已售' ? '已成交' : cart.has(goods.id) ? '已在购物车' : '加入购物车'
+              }}
             </el-button>
-            <el-button size="large" :disabled="goods.status === '下架'" @click="buyNow">立即下单</el-button>
+            <el-button size="large" :disabled="goods.status !== '在售'" @click="buyNow">立即下单</el-button>
             <el-button size="large" :type="favorite.has(goods.id) ? 'warning' : 'default'" plain @click="toggleFavorite">
               <el-icon><Star /></el-icon>{{ favorite.has(goods.id) ? '已收藏' : '收藏' }}
             </el-button>
@@ -191,10 +195,18 @@ export default {
       this.loading = false
     },
     addToCart() {
+      if (this.goods.status !== '在售') {
+        ElMessage.warning(this.goods.status === '已售' ? '该宝贝已成交' : '该宝贝已下架')
+        return
+      }
       const ok = this.cart.add(this.goods, this.seller.name || '同学')
       ElMessage[ok ? 'success' : 'warning'](ok ? '已加入购物车' : '该宝贝已在购物车中')
     },
     buyNow() {
+      if (this.goods.status !== '在售') {
+        ElMessage.warning(this.goods.status === '已售' ? '该宝贝已成交' : '该宝贝已下架')
+        return
+      }
       this.cart.add(this.goods, this.seller.name || '同学')
       this.$router.push('/cart')
     },
@@ -308,7 +320,8 @@ export default {
   border: 2px solid transparent;
   color: var(--text);
   cursor: pointer;
-  transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+  opacity: 0.72;
+  transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s, opacity 0.18s;
 }
 
 .thumbs .thumb span {
@@ -318,11 +331,14 @@ export default {
 
 .thumbs .thumb:hover {
   transform: translateY(-2px);
+  opacity: 1;
 }
 
 .thumbs .thumb.active {
+  opacity: 1;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(0, 181, 120, 0.18);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 14px rgba(0, 181, 120, 0.3);
 }
 
 .thumbs .thumb--more {
@@ -444,8 +460,9 @@ export default {
 }
 
 .related-grid {
+  /* 自适应列数：推荐满 3 件时三列，稀疏时卡片自动拉伸占满，避免大片空白 */
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 12px;
 }
 
@@ -504,10 +521,6 @@ export default {
 
   .big-emoji {
     font-size: 100px;
-  }
-
-  .related-grid {
-    grid-template-columns: 1fr;
   }
 }
 </style>

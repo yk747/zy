@@ -12,7 +12,9 @@
       <button class="fav-btn" :class="{ on: favorite }" type="button" @click.stop="$emit('fav', goods)">
         <el-icon><Star /></el-icon>
       </button>
-      <span v-if="goods.status === '下架'" class="off-shelf">已下架</span>
+      <span v-if="goods.status && goods.status !== '在售'" class="off-shelf">
+        {{ goods.status === '已售' ? '已成交' : '已下架' }}
+      </span>
     </div>
 
     <div class="body">
@@ -29,10 +31,10 @@
           size="small"
           type="primary"
           round
-          :disabled="goods.status === '下架' || inCart"
+          :disabled="goods.status !== '在售' || inCart"
           @click.stop="$emit('add', goods)"
         >
-          {{ inCart ? '已加购' : '加入购物车' }}
+          {{ inCart ? '已加购' : goods.status === '已售' ? '已成交' : '加入购物车' }}
         </el-button>
       </div>
     </div>

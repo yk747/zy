@@ -170,8 +170,13 @@ export default {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 14px 18px;
-  margin-bottom: 12px;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+  transition: box-shadow 0.2s ease;
+}
+
+.order-item:hover {
+  box-shadow: var(--shadow-hover);
 }
 
 .head {
@@ -179,6 +184,7 @@ export default {
   align-items: center;
   gap: 12px;
   padding-bottom: 10px;
+  margin-bottom: 4px;
   border-bottom: 1px dashed var(--border);
 }
 

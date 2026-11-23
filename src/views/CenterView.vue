@@ -3,7 +3,7 @@
   本身不写业务，只负责：
    ① 顶部问候语 + 统计卡片
    ② 左侧 el-menu（router 模式）切换子页面
-   ③ <router-view> 渲染 /center/my-goods 与 /center/my-orders
+   ③ <router-view> 渲染 /center/my-goods、/center/my-orders 与 /center/my-favorites
   ============================================================ -->
 <template>
   <div class="page">
@@ -30,6 +30,9 @@
           <el-menu-item index="/center/my-orders">
             <el-icon><Tickets /></el-icon>我的订单
           </el-menu-item>
+          <el-menu-item index="/center/my-favorites">
+            <el-icon><Star /></el-icon>我的收藏
+          </el-menu-item>
         </el-menu>
       </aside>
 
@@ -52,19 +55,33 @@ export default {
   name: 'CenterView',
   components: { StatCard },
   computed: {
-    ...mapState(useUserStore, ['name']),
+    ...mapState(useUserStore, ['id', 'name']),
     ...mapState(useCartStore, { cartCount: 'totalCount' }),
     ...mapState(useFavoriteStore, { favCount: 'count' }),
-    ...mapState(useOrderStore, { orderCount: 'orderCount' }),
     activePath() {
       return this.$route.path
     },
+    // 统计口径按"我"过滤：订单记录/待面交只算当前登录同学的，不掺别人的订单
+    myOrderCount() {
+      return useOrderStore().myOrders(this.id).length
+    },
+    myPendingCount() {
+      return useOrderStore()
+        .myOrders(this.id)
+        .filter((order) => order.status === '待面交').length
+    },
     statCards() {
+      // 订单状态卡动态化：有待面交订单就显示笔数，否则显示收尾状态
+      const orderStatus = this.myPendingCount
+        ? { value: this.myPendingCount, unit: '笔待面交' }
+        : this.myOrderCount
+          ? { value: '全部完成', unit: '' }
+          : { value: '暂无', unit: '订单' }
       return [
         { title: '购物车', value: this.cartCount, unit: '件', icon: 'ShoppingCart', tone: 'green' },
         { title: '我的收藏', value: this.favCount, unit: '件', icon: 'Star', tone: 'amber' },
-        { title: '订单记录', value: this.orderCount, unit: '笔', icon: 'Tickets', tone: 'orange' },
-        { title: '订单状态', value: this.orderCount ? '进行中' : '暂无', icon: 'Bell', tone: 'blue' }
+        { title: '订单记录', value: this.myOrderCount, unit: '笔', icon: 'Tickets', tone: 'orange' },
+        { title: '订单状态', icon: 'Bell', tone: 'blue', ...orderStatus }
       ]
     }
   },

@@ -22,7 +22,9 @@ export const useCartStore = defineStore('cart', {
   },
   actions: {
     // 加购：已加过（孤品）返回 false，让页面提示"已经在购物车里了"
+    // 二手孤品成交即下架：非在售状态（已售 / 下架）一律拒绝加购
     add(goods, sellerName = '') {
+      if (goods.status && goods.status !== '在售') return false
       if (this.items.some((item) => String(item.id) === String(goods.id))) return false
       this.items.push({
         id: goods.id,

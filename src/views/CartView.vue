@@ -9,9 +9,9 @@
     <div class="page-head">
       <div>
         <h1>购物车</h1>
-        <p class="sub">已选宝贝支持一键下单，校园当面交付更安心。</p>
+        <p v-if="!isEmpty" class="sub">已选宝贝支持一键下单，校园当面交付更安心。</p>
       </div>
-      <div class="head-actions">
+      <div v-if="!isEmpty" class="head-actions">
         <el-tag :type="serverState.online === false ? 'warning' : 'success'" effect="plain">
           {{ serverState.online === false ? '离线模式' : '在线服务' }}
         </el-tag>
@@ -108,7 +108,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { useCartStore } from '../store/cart'
 import { useUserStore } from '../store/user'
 import { useOrderStore } from '../store/order'
-import { serverState } from '../api/goods'
+import { fetchGoods, serverState, updateGoods } from '../api/goods'
 
 export default {
   name: 'CartView',
@@ -156,6 +156,22 @@ export default {
       if (!this.form.place) this.form.place = '东区食堂门口'
       this.checkoutVisible = true
     },
+    // 成交即下架：把刚买下的孤品 PUT 成「已售」
+    // json-server 的 PUT 是整体替换，所以要先取完整商品对象再改状态字段
+    async markGoodsSold(items) {
+      try {
+        const all = await fetchGoods()
+        await Promise.allSettled(
+          items.map((item) => {
+            const full = all.find((goods) => String(goods.id) === String(item.id))
+            if (!full || full.status !== '在售') return Promise.resolve(null)
+            return updateGoods(item.id, { ...full, status: '已售' })
+          })
+        )
+      } catch {
+        /* 离线时 updateGoods 内部会写本地数据；即使失败也不影响已生成的订单 */
+      }
+    },
     submitOrder() {
       this.$refs.formRef.validate(async (valid) => {
         if (!valid) {
@@ -164,6 +180,8 @@ export default {
         }
         this.submitting = true
         try {
+          // 先快照要买的宝贝：下单成功后要拿它们做"成交即下架"，清空购物车后就没了
+          const boughtItems = this.items.map((item) => ({ ...item }))
           // 订单模拟（E7）：items 里带上卖家信息，方便卖家端查"我卖出的"
           const order = await useOrderStore().placeOrder({
             buyerId: this.id,
@@ -178,6 +196,8 @@ export default {
           useCartStore().clear()
           this.checkoutVisible = false
           ElMessage.success(`下单成功，订单号 ${order.orderNo}，请尽快与卖家确认交付`)
+          // 成交即下架：二手孤品卖出后标记已售，集市列表不再展示（不阻塞跳转）
+          this.markGoodsSold(boughtItems)
           this.$router.push('/center/my-orders')
         } catch (err) {
           ElMessage.error(err.message || '下单失败，请稍后再试')
@@ -199,6 +219,10 @@ export default {
 
 .empty-card {
   padding: 28px;
+  /* 空车时让空状态卡片撑起主要视区并垂直居中，避免下半屏大片空白 */
+  min-height: min(420px, 48vh);
+  display: grid;
+  place-items: center;
 }
 
 .offline-alert {

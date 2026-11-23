@@ -25,7 +25,11 @@
 
           <div class="price-col">
             <span class="price">￥{{ Number(goods.price).toFixed(0) }}</span>
-            <el-tag :type="goods.status === '在售' ? 'success' : 'info'" size="small" effect="plain">
+            <el-tag
+              :type="goods.status === '在售' ? 'success' : goods.status === '已售' ? 'danger' : 'info'"
+              size="small"
+              effect="plain"
+            >
               {{ goods.status }}
             </el-tag>
           </div>

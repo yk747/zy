@@ -225,6 +225,10 @@ export default {
       this.current = goods
     },
     addToCart(goods) {
+      if (goods.status && goods.status !== '在售') {
+        ElMessage.warning('该宝贝已成交或下架，看看其他好物吧')
+        return
+      }
       const ok = this.cart.add(goods, this.sellerName(goods.sellerId))
       ElMessage[ok ? 'success' : 'warning'](
         ok ? '已加入购物车' : '该宝贝已在购物车中'
@@ -235,6 +239,10 @@ export default {
       ElMessage[added ? 'success' : 'info'](added ? '已收藏' : '已取消收藏')
     },
     buyNow() {
+      if (this.current.status && this.current.status !== '在售') {
+        ElMessage.warning('该宝贝已成交或下架')
+        return
+      }
       this.cart.add(this.current, this.sellerName(this.current.sellerId))
       this.$router.push('/cart')
     },
