@@ -7,15 +7,30 @@
   ============================================================ -->
 <template>
   <div class="page">
-    <div class="page-head">
-      <div>
-        <h1>闲置集市</h1>
-        <p class="sub">平台严选校内优质闲置，价格透明，当面验货更安心。</p>
+    <section class="banner">
+      <div class="banner-inner">
+        <div class="banner-text">
+          <span class="banner-pill"><span class="dot"></span>校园严选 · 当面验货更安心</span>
+          <h1>好物流转<br />让闲置产生价值</h1>
+          <p class="banner-sub">平台严选校内优质闲置，价格透明，交付更安心。</p>
+          <div class="banner-actions">
+            <el-button type="primary" size="large" round class="cta-btn" @click="$router.push('/publish')">
+              <el-icon><CirclePlus /></el-icon>发布宝贝
+            </el-button>
+            <el-button size="large" round class="ghost-btn" @click="$router.push('/cart')">
+              <el-icon><ShoppingCart /></el-icon>我的购物车
+            </el-button>
+          </div>
+        </div>
+        <div class="banner-deco" aria-hidden="true">
+          <span class="deco d1">📚</span>
+          <span class="deco d2">🎧</span>
+          <span class="deco d3">🚲</span>
+          <span class="deco d4">🏀</span>
+          <span class="deco d5">🧴</span>
+        </div>
       </div>
-      <el-button type="primary" @click="$router.push('/publish')">
-        <el-icon><CirclePlus /></el-icon>发布宝贝
-      </el-button>
-    </div>
+    </section>
 
     <el-alert
       v-if="serverState.online === false"
@@ -212,8 +227,197 @@ export default {
 
 <style scoped>
 .offline-alert {
-  margin: 14px 0 0;
+  margin: 0 0 16px;
   border-radius: 12px;
+}
+
+/* ---------- 品牌 Banner ---------- */
+.banner {
+  position: relative;
+  margin: 4px 0 18px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(118deg, #0aa26f 0%, #0b8a68 46%, #0f7d86 100%);
+  overflow: hidden;
+  box-shadow: 0 18px 44px rgba(8, 105, 78, 0.28);
+}
+
+.banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(420px 190px at 84% -10%, rgba(255, 255, 255, 0.16), transparent 65%),
+    radial-gradient(340px 170px at 4% 108%, rgba(255, 255, 255, 0.1), transparent 62%);
+  pointer-events: none;
+}
+
+.banner-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 30px 34px;
+}
+
+.banner-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.banner-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #eafff5;
+  font-size: 12.5px;
+  backdrop-filter: blur(4px);
+}
+
+.banner-pill .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8dffc9;
+  box-shadow: 0 0 0 4px rgba(141, 255, 201, 0.25);
+  animation: pulse 2.2s infinite;
+}
+
+.banner h1 {
+  color: #fff;
+  font-size: 30px;
+  margin: 14px 0 6px;
+  line-height: 1.28;
+}
+
+.banner h1::after {
+  width: 46px;
+  background: linear-gradient(90deg, #8dffc9, #4fd1c5);
+}
+
+.banner-sub {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 14px;
+}
+
+.banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.cta-btn.el-button--primary:not(.is-disabled) {
+  background: #fff;
+  background-image: none;
+  border-color: #fff;
+  color: var(--primary-dark);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+}
+
+.cta-btn.el-button--primary:not(.is-disabled):hover {
+  background: #f0fff8;
+  color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.ghost-btn {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.42);
+  color: #fff;
+}
+
+.ghost-btn:hover {
+  background: rgba(255, 255, 255, 0.26);
+  border-color: rgba(255, 255, 255, 0.62);
+  color: #fff;
+}
+
+.banner-deco {
+  position: relative;
+  width: 232px;
+  height: 188px;
+  flex-shrink: 0;
+}
+
+.deco {
+  position: absolute;
+  font-size: 44px;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.22));
+  animation: floaty 6s ease-in-out infinite;
+}
+
+.deco.d1 {
+  left: 4px;
+  top: 4px;
+}
+
+.deco.d2 {
+  right: 24px;
+  top: 32px;
+  font-size: 36px;
+  animation-delay: 1.2s;
+}
+
+.deco.d3 {
+  left: 46px;
+  bottom: 6px;
+  animation-delay: 2.2s;
+}
+
+.deco.d4 {
+  right: 0;
+  bottom: 34px;
+  font-size: 32px;
+  animation-delay: 3.1s;
+}
+
+.deco.d5 {
+  left: 102px;
+  top: 72px;
+  font-size: 26px;
+  animation-delay: 4s;
+}
+
+@keyframes pulse {
+  50% {
+    box-shadow: 0 0 0 7px rgba(141, 255, 201, 0.08);
+  }
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(6deg);
+  }
+}
+
+@media (max-width: 860px) {
+  .banner-inner {
+    padding: 24px 22px;
+  }
+
+  .banner-deco {
+    display: none;
+  }
+
+  .banner h1 {
+    font-size: 25px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deco,
+  .banner-pill .dot {
+    animation: none;
+  }
 }
 
 .hero {
