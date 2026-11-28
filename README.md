@@ -2,7 +2,7 @@
 
 把《WEB 前端框架技术》课程六节课的知识点整合成一个可运行的校园二手交易平台：Vue 3 前端 + json-server 本地接口。
 
-面向在校学生的闲置物品交易平台：卖家发布商品、买家浏览搜索、收藏加购、约面交下单，并附移动端（Vant）买家场景。
+面向在校学生的闲置物品交易平台：卖家发布商品、买家浏览搜索、收藏加购、约面交下单。
 
 > 本项目位于 `20261104/`，**未修改** `web-framework-32605150617/` 中的任何原有实验。
 
@@ -12,8 +12,7 @@
 | --- | --- | --- |
 | Vue 3 | 3.5 | 页面与组件（选项式写法，与课程一致） |
 | Vue Router | 4.6 | hash 路由、动态路由、嵌套路由、登录守卫、懒加载 |
-| Element Plus | 2.14 | 桌面端组件库（Menu 布局、Form、Dialog、Empty 等） |
-| Vant | 4.10 | 移动端集市（van-card / van-tag / van-submit-bar，按需引入） |
+| Element Plus | 2.14 | UI 组件库（Menu 布局、Form、Dialog、Empty 等，按需引入） |
 | Pinia | 4.1 | 用户 / 购物车 / 收藏 / 订单四个仓库 + persist 持久化 |
 | Axios | 1.21 | 请求层：get / post / put / delete + catch 兜底 |
 | json-server | 0.17 | 本地接口（3001 端口），数据落盘 `server/db.json` |
@@ -88,15 +87,18 @@ npm run dev      # 前端
 
 | 路由 | 页面 | 主要功能 |
 | --- | --- | --- |
-| `/login` | 登录 | 表单校验、账号校验、token 写入、登录后跳回原目标 |
-| `/market` | 商品广场 | 搜索高亮、分类筛选、排序、统计卡、加购/收藏 |
-| `/goods/:id` | 闲置详情 | 动态路由、卖家信息、同类推荐、加购/立即购买/收藏 |
-| `/publish` | 发布闲置 | 发布表单（标题/分类/价格/成色/占位图/描述） |
-| `/cart` | 购物车 | 移除/清空、面交信息表单、提交订单 |
-| `/center` | 个人中心（嵌套外壳） | 统计卡 + 子页面切换 |
+| `/login` | 登录 | 验证码 / 密码登录、注册、找回密码、协议勾选、第三方引导 |
+| `/market` | 商品广场 | 搜索高亮、分类/价格区间筛选、排序、三栏布局、猜你喜欢入口、加购/收藏 |
+| `/goods/:id` | 闲置详情 | 动态路由、卖家信用评分、浏览足迹、同类推荐 + 猜你喜欢、咨询卖家、加购/购买/收藏 |
+| `/publish` | 发布闲置 | 发布表单（标题/分类/价格/成色/描述） |
+| `/cart` | 购物车 | 移除/清空、面交信息表单、提交订单、成交后商品自动下架 |
+| `/center` | 个人中心（嵌套外壳） | 统计卡 + 资料编辑 + 子页面切换 |
 | `/center/my-goods` | 我的发布 | 上架/下架、编辑、删除 |
-| `/center/my-orders` | 我的订单 | 我买到的 / 我卖出的、确认完成 |
-| `/mobile` | 移动端集市 | Vant 商品广场 + 详情 + 加购（手机壳容器） |
+| `/center/my-orders` | 我的订单 | 我买到的 / 我卖出的、确认完成、双向评价、删除已完成订单 |
+| `/center/my-favorites` | 我的收藏 | 取消收藏、加购、详情跳转 |
+| `/center/my-messages` | 消息中心 | 咨询会话收件箱、订单通知、系统公告 |
+| `/center/my-footprints` | 我的足迹 | 最近浏览记录、清空足迹 |
+| `/center/my-credit` | 信用档案 | 信用评分、收到的评价、交易数据看板（买卖金额/完成率） |
 | `*` | 404 | 通配符兜底 |
 
 ## 硬指标对照（题目 T1—T7）
@@ -104,9 +106,9 @@ npm run dev      # 前端
 | # | 硬指标 | 项目中的位置 |
 | --- | --- | --- |
 | T1 | Vue3 选项式 API + Vite + npm | 全项目 |
-| T2 | ≥3 个自封装组件（props+emit，含插槽） | `SearchBar`（props+emit）、`GoodsCard`（props+emit）、`SectionCard`（插槽）、`GoodsFormDialog`（组件 v-model）、`StatCard`（props）；computed：广场筛选/详情相关；watch：详情页监听 `:id` |
+| T2 | ≥3 个自封装组件（props+emit，含插槽） | `SearchBar`、`GoodsCard`、`SectionCard`（插槽）、`GoodsFormDialog`（v-model）、`StatCard`、`GoodsImage`、`ReviewDialog`、`ProfileEditDialog`；computed：广场筛选/详情推荐/信用统计；watch：详情页监听 `:id` |
 | T3 | ≥5 页面 + 动态路由 + 嵌套路由 + 守卫 + 懒加载 | `router/index.js`：全部 `() => import()` 懒加载 |
-| T4 | Element Plus 主界面 + Vant 移动端页 | EP：Menu/Form/Dialog/Table(我的发布列表)/Empty；Vant：`MobileView.vue`（van-card/van-tag/van-submit-bar） |
+| T4 | Element Plus 组件库 | Menu/Form/Dialog/Table(我的发布列表)/Empty，按需引入 |
 | T5 | json-server 3001 + axios 四种请求 + catch 兜底 + loading | `server/db.json` + `api/goods.js` + 各页面 loading 态 |
 | T6 | Pinia ≥2 仓库 + actions + persist | `user` / `cart` / `favorite` / `order`，cart 与 favorite、user 均 persist |
 | T7 | build / preview / 部署 | `npm run build` → `npm run preview`；hash 路由可部署任意静态平台 |
@@ -116,7 +118,7 @@ npm run dev      # 前端
 ```
 20261104/
 ├─ index.html
-├─ vite.config.js             # Vue 插件 + Vant 按需引入
+├─ vite.config.js             # Vue 插件 + Element Plus 按需引入
 ├─ package.json
 ├─ shared/
 │  └─ goods.js                # 前后端共享的种子数据（goods/users/orders）
@@ -127,7 +129,10 @@ npm run dev      # 前端
    ├─ App.vue                 # 外壳、provide 全局信息、路由过渡
    ├─ style.css               # 集市设计令牌（绿色主题，含 Element Plus 主色）
    ├─ api/goods.js            # Axios 封装 + 离线降级
-   ├─ directives/index.js     # v-focus / v-highlight
+   ├─ api/extraGoods.js       # 跨品类扩展商品 + 已售状态持久化
+   ├─ api/goodsImages.js      # 本地实拍图匹配 + 同批去重
+   ├─ api/community.js        # 评价/会话/足迹/通知/资料的本地持久层
+   ├─ directives/index.js     # v-focus / v-highlight / v-ripple
    ├─ router/index.js         # 路由表（懒加载）+ 登录守卫
    ├─ store/
    │  ├─ user.js              # Pinia：登录同学（persist）
@@ -140,6 +145,9 @@ npm run dev      # 前端
    │  ├─ GoodsCard.vue        # 闲置卡片（props + emit + 高亮指令）
    │  ├─ SectionCard.vue      # 区块卡片（默认/extra/footer 插槽）
    │  ├─ GoodsFormDialog.vue  # 发布/编辑弹窗（组件 v-model）
+   │  ├─ GoodsImage.vue       # 真实图片 + emoji 兜底
+   │  ├─ ReviewDialog.vue     # 交易评价弹窗
+   │  ├─ ProfileEditDialog.vue# 个人资料编辑弹窗
    │  └─ StatCard.vue         # 统计卡（props）
    └─ views/
       ├─ LoginView.vue
@@ -150,7 +158,10 @@ npm run dev      # 前端
       ├─ CenterView.vue
       ├─ MyGoodsView.vue
       ├─ MyOrdersView.vue
-      ├─ MobileView.vue
+      ├─ MyFavoritesView.vue
+      ├─ MyMessagesView.vue
+      ├─ MyFootprintsView.vue
+      ├─ MyCreditView.vue
       └─ NotFoundView.vue
 ```
 

@@ -23,7 +23,7 @@
 
           <div v-for="item in order.items" :key="item.goodsId" class="order-goods" @click="goDetail(item.goodsId)">
             <div class="cover cover-art" :style="{ background: item.gradient }">
-              <span>{{ item.emoji }}</span>
+              <GoodsImage :goods="item" emoji-size="26px" />
             </div>
             <div class="goods-main">
               <b>{{ item.title }}</b>
@@ -51,16 +51,27 @@
               >
                 确认收货
               </el-button>
-              <el-button
-                v-if="order.status === '已完成'"
-                type="danger"
-                plain
-                size="small"
-                :loading="deletingId === order.id"
-                @click="deleteOrder(order)"
-              >
-                删除订单
-              </el-button>
+              <template v-if="order.status === '已完成'">
+                <el-button
+                  v-if="!hasReviewed(order.id, me.id, tab === 'bought' ? 'buyer' : 'seller')"
+                  type="success"
+                  plain
+                  size="small"
+                  @click="openReview(order)"
+                >
+                  <el-icon><Star /></el-icon>评价
+                </el-button>
+                <el-tag v-else size="small" type="info" effect="plain">已评价</el-tag>
+                <el-button
+                  type="danger"
+                  plain
+                  size="small"
+                  :loading="deletingId === order.id"
+                  @click="deleteOrder(order)"
+                >
+                  删除订单
+                </el-button>
+              </template>
             </span>
           </div>
         </div>
@@ -72,22 +83,42 @@
         </el-button>
       </el-empty>
     </div>
+
+    <!-- 交易评价弹窗 -->
+    <ReviewDialog
+      v-model="reviewVisible"
+      :order="reviewOrder"
+      :goods="reviewGoods"
+      :target-id="reviewTarget.id"
+      :target-name="reviewTarget.name"
+      :from-id="me.id"
+      :role="tab === 'bought' ? 'buyer' : 'seller'"
+      @submitted="onReviewed"
+    />
   </div>
 </template>
 
 <script>
 import { ElMessage, ElMessageBox } from 'element-plus'
+import GoodsImage from '../components/GoodsImage.vue'
+import ReviewDialog from '../components/ReviewDialog.vue'
+import { hasReviewed, addNotification } from '../api/community'
 import { useOrderStore } from '../store/order'
 import { useUserStore } from '../store/user'
 
 export default {
   name: 'MyOrdersView',
+  components: { GoodsImage, ReviewDialog },
   data() {
     return {
       tab: 'bought',
       loading: false,
       confirmingId: '',
-      deletingId: ''
+      deletingId: '',
+      reviewVisible: false,
+      reviewOrder: {},
+      reviewGoods: {},
+      reviewTarget: {}
     }
   },
   computed: {
@@ -115,6 +146,7 @@ export default {
     }
   },
   methods: {
+    hasReviewed,
     formatTime(value) {
       if (!value) return '—'
       const date = new Date(value)
@@ -134,6 +166,29 @@ export default {
       } finally {
         this.confirmingId = ''
       }
+    },
+    // 打开评价弹窗：根据"我买到的/我售出的"确定评价对象
+    openReview(order) {
+      const item = (order.items || [])[0] || {}
+      this.reviewOrder = order
+      this.reviewGoods = item
+      if (this.tab === 'bought') {
+        // 我买到的 → 评价卖家（取订单项里的 sellerId/sellerName）
+        this.reviewTarget = { id: item.sellerId, name: item.sellerName }
+      } else {
+        // 我售出的 → 评价买家
+        this.reviewTarget = { id: order.buyerId, name: order.buyerName }
+      }
+      this.reviewVisible = true
+    },
+    onReviewed() {
+      // 评价成功后给对方生成一条通知（本地）
+      const targetId = this.reviewTarget.id
+      addNotification(targetId, {
+        type: 'review',
+        title: '收到一条新评价',
+        content: `${this.me.name} 评价了你们的交易，快去信用档案看看吧`
+      })
     },
     // 已成交订单：二次确认后删除，记录从列表中移除
     async deleteOrder(order) {
@@ -213,12 +268,14 @@ export default {
 }
 
 .cover {
+  position: relative;
   width: 56px;
   height: 56px;
   border-radius: 10px;
   display: grid;
   place-items: center;
   font-size: 26px;
+  overflow: hidden;
 }
 
 .goods-main {

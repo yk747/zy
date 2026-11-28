@@ -46,7 +46,7 @@
 
           <div v-for="item in items" :key="item.id" class="cart-item">
             <div class="item-cover cover-art" :style="{ background: item.gradient }" @click="goDetail(item.id)">
-              <span>{{ item.emoji }}</span>
+              <GoodsImage :goods="item" emoji-size="30px" />
             </div>
 
             <div class="item-main">
@@ -105,13 +105,16 @@
 <script>
 import { mapState } from 'pinia'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import GoodsImage from '../components/GoodsImage.vue'
 import { useCartStore } from '../store/cart'
 import { useUserStore } from '../store/user'
 import { useOrderStore } from '../store/order'
-import { fetchGoods, serverState, updateGoods } from '../api/goods'
+import { serverState } from '../api/goods'
+import { fetchAllGoods, updateAnyGoods } from '../api/extraGoods'
 
 export default {
   name: 'CartView',
+  components: { GoodsImage },
   data() {
     return {
       serverState,
@@ -160,12 +163,12 @@ export default {
     // json-server 的 PUT 是整体替换，所以要先取完整商品对象再改状态字段
     async markGoodsSold(items) {
       try {
-        const all = await fetchGoods()
+        const all = await fetchAllGoods()
         await Promise.allSettled(
           items.map((item) => {
             const full = all.find((goods) => String(goods.id) === String(item.id))
             if (!full || full.status !== '在售') return Promise.resolve(null)
-            return updateGoods(item.id, { ...full, status: '已售' })
+            return updateAnyGoods(item.id, { ...full, status: '已售' })
           })
         )
       } catch {
@@ -267,6 +270,7 @@ export default {
 }
 
 .item-cover {
+  position: relative;
   width: 64px;
   height: 64px;
   border-radius: 12px;
@@ -274,6 +278,7 @@ export default {
   place-items: center;
   font-size: 30px;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .item-main {

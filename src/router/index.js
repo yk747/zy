@@ -70,14 +70,26 @@ const router = createRouter({
           name: 'my-favorites',
           component: () => import('../views/MyFavoritesView.vue'),
           meta: { title: '我的收藏', requiresAuth: true }
+        },
+        {
+          path: 'my-messages',
+          name: 'my-messages',
+          component: () => import('../views/MyMessagesView.vue'),
+          meta: { title: '消息中心', requiresAuth: true }
+        },
+        {
+          path: 'my-footprints',
+          name: 'my-footprints',
+          component: () => import('../views/MyFootprintsView.vue'),
+          meta: { title: '我的足迹', requiresAuth: true }
+        },
+        {
+          path: 'my-credit',
+          name: 'my-credit',
+          component: () => import('../views/MyCreditView.vue'),
+          meta: { title: '信用档案', requiresAuth: true }
         }
       ]
-    },
-    {
-      path: '/mobile',
-      name: 'mobile',
-      component: () => import('../views/MobileView.vue'),
-      meta: { title: '移动端集市', requiresAuth: true }
     },
     {
       // 404 兜底：通配符必须最后，路由是从上往下匹配的

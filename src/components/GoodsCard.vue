@@ -5,9 +5,9 @@
   商品图用"占位色块"：gradient 渐变 + emoji（题目 F3 允许占位图）
   ============================================================ -->
 <template>
-  <div class="goods-card" @click="$emit('view', goods)">
+  <div v-ripple class="goods-card" @click="$emit('view', goods)">
     <div class="cover cover-art" :style="{ background: goods.gradient }">
-      <span class="emoji">{{ goods.emoji }}</span>
+      <GoodsImage :goods="goods" emoji-size="54px" />
       <span class="condition-tag">{{ goods.condition }}</span>
       <button class="fav-btn" :class="{ on: favorite }" type="button" @click.stop="$emit('fav', goods)">
         <el-icon><Star /></el-icon>
@@ -21,12 +21,20 @@
       <p class="title">
         <span v-highlight="keyword">{{ goods.title }}</span>
       </p>
+      <div class="verified-line">
+        <span class="verified-badge"><el-icon><CircleCheck /></el-icon>实名卖家</span>
+        <span class="heat"><el-icon><Star /></el-icon>{{ wants }} 人想要</span>
+      </div>
       <div class="meta">
         <span class="tag">{{ goods.category }}</span>
         <span class="muted small">{{ goods.createdAt }}</span>
       </div>
       <div class="foot">
-        <span class="price"><small>￥</small>{{ Number(goods.price).toFixed(0) }}</span>
+        <div class="price-box">
+          <span class="price"><small>￥</small>{{ Number(goods.price).toFixed(0) }}</span>
+          <span v-if="originalPrice > goods.price" class="original">￥{{ originalPrice }}</span>
+          <span v-if="discount" class="discount">{{ discount }}折</span>
+        </div>
         <el-button
           size="small"
           type="primary"
@@ -42,15 +50,37 @@
 </template>
 
 <script>
+import GoodsImage from './GoodsImage.vue'
+
 export default {
   name: 'GoodsCard',
+  components: { GoodsImage },
   props: {
     goods: { type: Object, required: true },
     favorite: { type: Boolean, default: false },
     inCart: { type: Boolean, default: false },
     keyword: { type: String, default: '' }
   },
-  emits: ['view', 'add', 'fav']
+  emits: ['view', 'add', 'fav'],
+  computed: {
+    // 热度：基于 id 的稳定哈希，刷新不跳变，纯展示用
+    wants() {
+      const id = String(this.goods.id || '')
+      let hash = 0
+      for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) % 997
+      return 12 + (hash % 180)
+    },
+    originalPrice() {
+      // 八成新及以下给出参考原价，营造折扣感
+      const price = Number(this.goods.price) || 0
+      const discounted = /七成新|八成新/.test(this.goods.condition || '')
+      return discounted ? Math.round(price * 1.25) : price
+    },
+    discount() {
+      if (this.originalPrice <= Number(this.goods.price)) return ''
+      return (Number(this.goods.price) / this.originalPrice * 10).toFixed(1)
+    }
+  }
 }
 </script>
 
@@ -94,8 +124,17 @@ export default {
   transition: transform 0.25s ease;
 }
 
-.goods-card:hover .emoji {
+.goods-card:hover .emoji,
+.goods-card:hover :deep(.goods-image-emoji) {
   transform: scale(1.09) rotate(-4deg);
+}
+
+.goods-card :deep(.goods-image img) {
+  transition: opacity 0.28s ease, transform 0.3s ease;
+}
+
+.goods-card:hover :deep(.goods-image img) {
+  transform: scale(1.06);
 }
 
 .condition-tag {
@@ -187,6 +226,33 @@ export default {
   overflow: hidden;
 }
 
+.verified-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 7px;
+  border-radius: 6px;
+  background: var(--gold-bg);
+  color: var(--gold);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.heat {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
 .meta {
   display: flex;
   align-items: center;
@@ -199,17 +265,37 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 6px;
+}
+
+.price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 
 .price {
-  font-size: 21px;
+  font-size: 22px;
   color: var(--accent);
   font-weight: 800;
   letter-spacing: -0.3px;
   line-height: 1.3;
-  padding: 2px 9px;
-  border-radius: 10px;
-  background: linear-gradient(120deg, #fff3ea, #fffaf6);
+}
+
+.original {
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.discount {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: #fff0e9;
+  color: var(--accent-strong);
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .price small {

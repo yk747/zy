@@ -32,6 +32,7 @@ export const useCartStore = defineStore('cart', {
         price: Number(goods.price),
         emoji: goods.emoji || '📦',
         gradient: goods.gradient || 'linear-gradient(135deg, #6ee7b7, #059669)',
+        image: goods.image || '',
         sellerId: goods.sellerId || '',
         sellerName
       })

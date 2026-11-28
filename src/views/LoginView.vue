@@ -228,9 +228,9 @@
         <!-- 第三方登录占位 -->
         <div class="divider"><span>或使用以下方式</span></div>
         <div class="third-party" aria-label="第三方登录">
-          <button type="button" class="tp tp--wechat" @click="thirdPartyTip('微信')">微</button>
-          <button type="button" class="tp tp--qq" @click="thirdPartyTip('QQ')">Q</button>
-          <button type="button" class="tp tp--alipay" @click="thirdPartyTip('支付宝')">支</button>
+          <button v-ripple type="button" class="tp tp--wechat" @click="thirdPartyTip('微信')">微</button>
+          <button v-ripple type="button" class="tp tp--qq" @click="thirdPartyTip('QQ')">Q</button>
+          <button v-ripple type="button" class="tp tp--alipay" @click="thirdPartyTip('支付宝')">支</button>
         </div>
 
         <!-- 注册 / 一键登录为次要入口 -->
@@ -440,8 +440,19 @@ export default {
       this.agreed = false
       this.$nextTick(() => this.$refs.formRef?.clearValidate())
     },
-    thirdPartyTip(name) {
-      ElMessage.info(`${name}授权登录即将开放，请使用手机号或密码登录`)
+    async thirdPartyTip(name) {
+      try {
+        await ElMessageBox.confirm(
+          `${name}账号可直接用绑定的手机号登录本站，无需重复注册。现在前往手机号登录？`,
+          `${name}快捷登录`,
+          { confirmButtonText: '去手机号登录', cancelButtonText: '稍后再说', type: 'info' }
+        )
+      } catch {
+        return // 用户点"稍后再说"直接返回
+      }
+      this.switchMode('code')
+      this.$nextTick(() => this.$refs.formRef?.validateField?.('phone'))
+      ElMessage.success('已切换到手机号登录，请输入手机号获取验证码')
     },
     startCountdown() {
       this.smsCountdown = 60

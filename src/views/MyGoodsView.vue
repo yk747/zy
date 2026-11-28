@@ -11,7 +11,7 @@
       <template v-if="myGoods.length">
         <div v-for="goods in myGoods" :key="goods.id" class="publish-item">
           <div class="cover cover-art" :style="{ background: goods.gradient }">
-            <span>{{ goods.emoji }}</span>
+            <GoodsImage :goods="goods" emoji-size="30px" />
           </div>
 
           <div class="main">
@@ -65,12 +65,14 @@
 <script>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import GoodsFormDialog from '../components/GoodsFormDialog.vue'
-import { fetchGoods, updateGoods, removeGoods as removeGoodsApi } from '../api/goods'
+import GoodsImage from '../components/GoodsImage.vue'
+import { updateGoods, removeGoods as removeGoodsApi } from '../api/goods'
+import { fetchAllGoods } from '../api/extraGoods'
 import { useUserStore } from '../store/user'
 
 export default {
   name: 'MyGoodsView',
-  components: { GoodsFormDialog },
+  components: { GoodsFormDialog, GoodsImage },
   data() {
     return {
       goodsList: [],
@@ -94,7 +96,7 @@ export default {
     async load() {
       this.loading = true
       try {
-        this.goodsList = await fetchGoods()
+        this.goodsList = await fetchAllGoods()
       } finally {
         this.loading = false
       }
@@ -166,12 +168,14 @@ export default {
 }
 
 .cover {
+  position: relative;
   width: 64px;
   height: 64px;
   border-radius: 12px;
   display: grid;
   place-items: center;
   font-size: 30px;
+  overflow: hidden;
 }
 
 .main {

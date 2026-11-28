@@ -40,7 +40,8 @@
 <script>
 import { ElMessage } from 'element-plus'
 import GoodsCard from '../components/GoodsCard.vue'
-import { fetchGoods, fetchUsers } from '../api/goods'
+import { fetchUsers } from '../api/goods'
+import { fetchAllGoods } from '../api/extraGoods'
 import { useCartStore } from '../store/cart'
 import { useFavoriteStore } from '../store/favorite'
 
@@ -76,7 +77,7 @@ export default {
   },
   async mounted() {
     try {
-      const [goods, users] = await Promise.all([fetchGoods(), fetchUsers()])
+      const [goods, users] = await Promise.all([fetchAllGoods(), fetchUsers()])
       this.goodsList = goods
       this.users = users
     } catch {

@@ -12,9 +12,14 @@
         <h1>个人中心</h1>
         <p class="sub">{{ name }}，欢迎回来。在这里管理宝贝资产、跟踪订单进度。</p>
       </div>
-      <el-button type="primary" @click="$router.push('/publish')">
-        <el-icon><CirclePlus /></el-icon>发布宝贝
-      </el-button>
+      <div class="head-actions">
+        <el-button plain @click="editVisible = true">
+          <el-icon><Edit /></el-icon>编辑资料
+        </el-button>
+        <el-button type="primary" @click="$router.push('/publish')">
+          <el-icon><CirclePlus /></el-icon>发布宝贝
+        </el-button>
+      </div>
     </div>
 
     <div class="stat-grid">
@@ -33,6 +38,16 @@
           <el-menu-item index="/center/my-favorites">
             <el-icon><Star /></el-icon>我的收藏
           </el-menu-item>
+          <el-menu-item index="/center/my-messages">
+            <el-icon><ChatDotRound /></el-icon>消息中心
+            <el-badge v-if="messageUnread" :value="messageUnread" class="menu-badge" />
+          </el-menu-item>
+          <el-menu-item index="/center/my-footprints">
+            <el-icon><Clock /></el-icon>我的足迹
+          </el-menu-item>
+          <el-menu-item index="/center/my-credit">
+            <el-icon><Tickets /></el-icon>信用档案
+          </el-menu-item>
         </el-menu>
       </aside>
 
@@ -40,12 +55,17 @@
         <router-view />
       </main>
     </div>
+
+    <ProfileEditDialog v-model="editVisible" @saved="onProfileSaved" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'pinia'
+import { ElMessage } from 'element-plus'
 import StatCard from '../components/StatCard.vue'
+import ProfileEditDialog from '../components/ProfileEditDialog.vue'
+import { unreadCount, getConversations } from '../api/community'
 import { useCartStore } from '../store/cart'
 import { useFavoriteStore } from '../store/favorite'
 import { useOrderStore } from '../store/order'
@@ -53,7 +73,10 @@ import { useUserStore } from '../store/user'
 
 export default {
   name: 'CenterView',
-  components: { StatCard },
+  components: { StatCard, ProfileEditDialog },
+  data() {
+    return { editVisible: false, messageUnread: 0 }
+  },
   computed: {
     ...mapState(useUserStore, ['id', 'name']),
     ...mapState(useCartStore, { cartCount: 'totalCount' }),
@@ -91,6 +114,19 @@ export default {
       await useOrderStore().fetchOrders()
     } catch {
       /* 请求失败时 api 层已降级本地数据，这里静默即可 */
+    }
+    this.refreshUnread()
+  },
+  methods: {
+    refreshUnread() {
+      const me = useUserStore()
+      this.messageUnread =
+        unreadCount(me.id) +
+        getConversations(me.id).reduce((sum, c) => sum + (c.unread || 0), 0)
+    },
+    onProfileSaved() {
+      ElMessage.success('个人资料已更新')
+      this.refreshUnread()
     }
   }
 }
@@ -149,6 +185,15 @@ export default {
 
 .center-body {
   min-width: 0;
+}
+
+.head-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.menu-badge {
+  margin-left: 6px;
 }
 
 @media (max-width: 900px) {

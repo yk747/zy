@@ -35,12 +35,31 @@
         <el-menu-item index="/center">
           <el-icon><User /></el-icon>个人中心
         </el-menu-item>
-        <el-menu-item index="/mobile">
-          <el-icon><Iphone /></el-icon>移动端
-        </el-menu-item>
       </el-menu>
 
-      <div class="user-area">
+      <div class="header-actions">
+        <el-input
+          v-model="searchText"
+          class="header-search"
+          size="default"
+          clearable
+          placeholder="搜索闲置好物"
+          @keyup.enter="doSearch"
+        >
+          <template #prefix><el-icon><Search /></el-icon></template>
+        </el-input>
+
+        <el-tooltip content="消息中心" placement="bottom">
+          <button v-ripple type="button" class="icon-btn" aria-label="消息中心" @click="$router.push('/center/my-messages')">
+            <el-icon><ChatDotRound /></el-icon>
+            <span v-if="messageUnread" class="icon-dot">{{ messageUnread > 9 ? '9+' : messageUnread }}</span>
+          </button>
+        </el-tooltip>
+
+        <el-button type="primary" class="publish-cta" @click="$router.push('/publish')">
+          <el-icon><Plus /></el-icon>发布宝贝
+        </el-button>
+
         <el-dropdown trigger="click" @command="onCommand">
           <span class="user-trigger">
             <el-avatar :size="30" class="avatar">{{ initial }}</el-avatar>
@@ -67,13 +86,24 @@ import { mapState } from 'pinia'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useCartStore } from '../store/cart'
 import { useUserStore } from '../store/user'
+import { unreadCount, getConversations } from '../api/community'
 
 export default {
   name: 'AppHeader',
+  data() {
+    return { searchText: '' }
+  },
   computed: {
     // pinia 的 mapState：state 与 getters 都能"抄"成组件的计算属性
     ...mapState(useCartStore, ['totalCount']),
-    ...mapState(useUserStore, ['name', 'initial', 'dorm']),
+    ...mapState(useUserStore, ['name', 'initial', 'dorm', 'id']),
+    messageUnread() {
+      const me = useUserStore()
+      return (
+        unreadCount(me.id) +
+        getConversations(me.id).reduce((sum, c) => sum + (c.unread || 0), 0)
+      )
+    },
     activePath() {
       const path = this.$route.path
       if (path.startsWith('/goods')) return '/market'
@@ -82,6 +112,11 @@ export default {
     }
   },
   methods: {
+    // 顶部搜索：带关键词跳集市，MarketView 会自动回填并筛选
+    doSearch() {
+      const word = String(this.searchText || '').trim()
+      this.$router.push({ name: 'market', query: word ? { q: word } : {} })
+    },
     onCommand(command) {
       if (command === 'goods') {
         this.$router.push('/center/my-goods')
@@ -129,9 +164,9 @@ export default {
 }
 
 .header-inner {
-  max-width: 1200px;
+  max-width: 1800px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
   height: 64px;
   display: flex;
   align-items: center;
@@ -235,6 +270,69 @@ export default {
   transform: translateY(-8px);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.header-search {
+  width: 190px;
+}
+
+.header-search :deep(.el-input__wrapper) {
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px var(--border) inset;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.header-search :deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 1px var(--primary) inset, 0 0 0 3px rgba(0, 181, 120, 0.12);
+  background: #fff;
+}
+
+.icon-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-soft);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.icon-btn:hover {
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+}
+
+.icon-dot {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--accent-strong, #e8541f);
+  color: #fff;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.publish-cta {
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(0, 181, 120, 0.22);
+}
+
 .user-area {
   flex-shrink: 0;
 }
@@ -283,6 +381,10 @@ export default {
     display: none;
   }
 
+  .header-search {
+    display: none;
+  }
+
   .header-inner {
     padding: 0 10px;
     gap: 6px;
@@ -327,6 +429,18 @@ export default {
 
   .user-trigger {
     padding: 3px;
+  }
+
+  .header-actions {
+    gap: 4px;
+  }
+
+  .publish-cta :deep(span) {
+    display: none;
+  }
+
+  .publish-cta {
+    padding: 8px;
   }
 }
 </style>

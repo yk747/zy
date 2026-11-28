@@ -1,13 +1,13 @@
 // ============================================================
 // vite.config.js —— 构建配置
 // ① @vitejs/plugin-vue：让 .vue 单文件组件能被编译
-// ② unplugin-vue-components + ElementPlusResolver / VantResolver：
-//    Element Plus 与 Vant 都按需引入（模板写标签，编译时自动补 import 与样式）
+// ② unplugin-vue-components + ElementPlusResolver：
+//    Element Plus 按需引入（模板写标签，编译时自动补 import 与样式）
 // ⚠️ 改完本文件要重启 dev 服务器
 // ============================================================
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver, VantResolver } from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { defineConfig } from 'vite'
 
 export default defineConfig(({ command, isPreview }) => ({
@@ -18,7 +18,7 @@ export default defineConfig(({ command, isPreview }) => ({
   plugins: [
     vue(),
     Components({
-      resolvers: [VantResolver(), ElementPlusResolver({ importStyle: 'css' })]
+      resolvers: [ElementPlusResolver({ importStyle: 'css' })]
     })
   ],
   server: {

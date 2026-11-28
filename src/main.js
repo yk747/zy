@@ -28,11 +28,13 @@ import {
   ChatDotRound,
   CircleCheck,
   CirclePlus,
+  Clock,
   Edit,
   Iphone,
   Location,
   Lock,
   MagicStick,
+  Message,
   Plus,
   Reading,
   Search,
@@ -41,6 +43,7 @@ import {
   ShoppingCart,
   Star,
   Tickets,
+  TrendCharts,
   User
 } from '@element-plus/icons-vue'
 
@@ -65,11 +68,13 @@ const icons = {
   ChatDotRound,
   CircleCheck,
   CirclePlus,
+  Clock,
   Edit,
   Iphone,
   Location,
   Lock,
   MagicStick,
+  Message,
   Plus,
   Reading,
   Search,
@@ -78,6 +83,7 @@ const icons = {
   ShoppingCart,
   Star,
   Tickets,
+  TrendCharts,
   User
 }
 for (const [key, component] of Object.entries(icons)) {
